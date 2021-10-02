@@ -1,9 +1,7 @@
-function getRandomPositiveNumber (min, max) {
-  if (min<0 || max<0) {return alert('Введите диапазон положительных чисел');} //пока алерты, потом можно будет поменять на что-то, что более подходит по контексту
-  min = Math.ceil(min);
-  if (max <= min) {return alert('Максимальное значение диапазона должно быть больше минимального как минимум на единицу');}
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function getRandomPositiveNumber (a, b) {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b))); // находим минимальное значение из модулей a и b, округляем вверх
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b))); // находим максимальное значение из модулей a и b, округляем вниз
+  return Math.floor(Math.random() * (upper - lower + 1)) + lower;
 }
 
 getRandomPositiveNumber(10,25);
@@ -14,4 +12,3 @@ function checkCommentLength (commentLength, maxCommentLength) {
 }
 
 checkCommentLength(127, 250);
-
