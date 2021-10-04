@@ -33,6 +33,8 @@ const getRandomElement = function(array) {
   return array[getRandomPositiveNumber(0, array.length-1)];
 };
 
+const usedIDies = [];
+
 const createComment = () => {
   const createMessage = function (random) {
     let firstMessage = getRandomElement(MESSAGES);
@@ -46,8 +48,21 @@ const createComment = () => {
     if (random === 1) {return firstMessage;}
     if (random === 2) {return firstMessage + ' ' + secondMessage();} //корявый способ, но какой придумал
   };
+
+  const generateCommentID = () => {
+    let uniqueID = getRandomPositiveNumber(1,15000);//id рандомное число от 1 до 15000 + плюс проверка на повторы
+    const checkID = function (value) {
+      return usedIDies.some((uniqueID) => value === uniqueID);//проверка наличия ID в массиве использованных ID
+    }
+    while (checkID(uniqueID)) {
+      uniqueID = getRandomPositiveNumber(1,15000);
+    }
+    usedIDies.push(uniqueID);
+    return uniqueID;
+  };
+
   return {
-    id: getRandomPositiveNumber(1,15000),   //id рандомное число от 1 до 15000 (сам выдумал, диапазон не указан)
+    id: generateCommentID(),
     avatar: 'img/avatar-' + getRandomPositiveNumber(1,6) + '.svg',
     message: createMessage(getRandomPositiveNumber(1,2)),
     name: getRandomElement(NAMES),
@@ -72,3 +87,4 @@ for (let i = 0; i < 25; i++) {
 };
 
 console.log(photoArray);
+console.log(usedIDies);
