@@ -12,15 +12,15 @@ function checkCommentLength (commentLength, maxCommentLength) {
 
 checkCommentLength(127, 250);
 
-const commentatorsNames = ['Ивашка', 'Наитемнейший', 'Броненосец', 'Серёга', 'Соловей', 'Мистер картофелина', 'Седовласый', 'Су-27', 'Водолаз', 'йцукен', 'Вася Пупыркин', 'Пёс', 'Кусок'
+const COMMENTATORS_NAMES = ['Ивашка', 'Наитемнейший', 'Броненосец', 'Серёга', 'Соловей', 'Мистер картофелина', 'Седовласый', 'Су-27', 'Водолаз', 'йцукен', 'Вася Пупыркин', 'Пёс', 'Кусок'
   , 'Опер-уполномоченный', 'Человек-молекула', 'Андрей', 'Король Севера', 'Снежок', 'Ахмед', 'Поликарп'];
 
-const photoDescriptions = ['все раскуплено, говорили они', 'пляж на небе', 'корабль не видит меня', 'вид спереди', 'Пейн я ног не чувствую', 'драндулет', 'завтрак чемпиона', 'сушнячок'
+const PHOTO_DESCRIPTIONS = ['все раскуплено, говорили они', 'пляж на небе', 'корабль не видит меня', 'вид спереди', 'Пейн я ног не чувствую', 'драндулет', 'завтрак чемпиона', 'сушнячок'
   , 'не дотянул до аэропорта' , 'двое против одного', 'пришествие', 'куда меня занесло', 'в заказе была шаверма', 'суши-кот', 'можно долго не мыть полы', 'переборщил с батутом'
   , 'лица счастья', 'дом построили вокруг машины', 'чтобы не пнуть кота', 'кто живет в этих кубиках?', 'евроремзачем я фоткаю своб еду?', 'улитка ползет по воде'
   , 'есть че по мелочи?', 'знак масонов', 'хотел ноги ополоснуть'];
 
-const commentMessages = [
+const COMMENT_MESSAGE = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -36,11 +36,11 @@ const usedIDies = [];//массив для записи уже использо�
 
 const createComment = () => {
   const createMessage = function (random) {
-    const firstMessage = getRandomElement(commentMessages);
+    const firstMessage = getRandomElement(COMMENT_MESSAGE);
     const createSecondMessage = () => {
-      let secondMessage = getRandomElement(commentMessages);
+      let secondMessage = getRandomElement(COMMENT_MESSAGE);
       while (secondMessage === firstMessage) { //проверка, чтобы сообщения не были одинаковыми.
-        secondMessage = getRandomElement(commentMessages);
+        secondMessage = getRandomElement(COMMENT_MESSAGE);
       }
       return secondMessage;
     };
@@ -51,7 +51,7 @@ const createComment = () => {
   const generateCommentID = () => {
     let uniqueID = getRandomPositiveNumber(1,15000);//id рандомное число от 1 до 15000 + плюс проверка на повторы
     const checkID = function (value) {              //проверка наличия ID в массиве использованных ID
-      return usedIDies.some((uniqueID) => value === uniqueID);//
+      return usedIDies.some((element) => value === element);//
     };
     while (checkID(uniqueID)) {
       uniqueID = getRandomPositiveNumber(1,15000);
@@ -64,18 +64,18 @@ const createComment = () => {
     id: generateCommentID(),
     avatar: `img/avatar-${  getRandomPositiveNumber(1,6)  }.svg`,
     message: createMessage(getRandomPositiveNumber(1,2)),
-    name: getRandomElement(commentatorsNames),
+    name: getRandomElement(COMMENTATORS_NAMES),
   };
 };
 
 
 const photoObjects = Array.from({length: 25});
 
-const createPhoto = function (i) {
+const createPhoto = function (index) {
   return {
-    id: i+1,
-    url: `photos/${  i  }.jpg`,
-    description: photoDescriptions[i],
+    id: index+1,
+    url: `photos/${  index  }.jpg`,
+    description: PHOTO_DESCRIPTIONS[index],
     likes: getRandomPositiveNumber(15,200),
     comments: Array.from({length: getRandomPositiveNumber(1,5)}, createComment), //количество комментов рандомно: 1-5 (сам выдумал)
   };
