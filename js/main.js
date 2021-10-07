@@ -50,10 +50,7 @@ const createComment = () => {
 
   const generateCommentID = () => {
     let uniqueID = getRandomPositiveNumber(1,15000);//id рандомное число от 1 до 15000 + плюс проверка на повторы
-    const checkID = function (value) {              //проверка наличия ID в массиве использованных ID
-      return usedIDies.some((element) => value === element);//
-    };
-    while (checkID(uniqueID)) {
+    while (usedIDies.includes(uniqueID)) {
       uniqueID = getRandomPositiveNumber(1,15000);
     }
     usedIDies.push(uniqueID);
