@@ -6,3 +6,4 @@ console.log(photoObjects);
 
 fillMiniPictures();
 showBigPicture();
+
