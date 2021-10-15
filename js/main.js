@@ -1,5 +1,7 @@
-import {photoObjects, usedIDies} from './gen-objects.js';//массив id для тестов
-import './mini-pictures.js';
+import {photoObjects} from './gen-objects.js';
+import {fillMiniPictures} from  './mini-pictures.js';
 
 console.log(photoObjects);
-console.log(usedIDies);
+
+fillMiniPictures();
+
