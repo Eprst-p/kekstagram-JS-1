@@ -6,11 +6,10 @@ const fullPictureContainer = document.querySelectorAll('.picture');
 const commentTemplate = document.querySelector('#comments_big_picture').content;
 const commentElement = commentTemplate.querySelector('.social__comment');
 const commentsContainer = bigPicture.querySelector('.social__comments');
-commentsContainer.innerHTML = ''; //очищаем дефолтные комменты
-
 
 const addComments = function (index) {
   const commentFragment = document.createDocumentFragment();
+  commentsContainer.innerHTML = ''; //очищаем старые комменты (иначе при клике они будут постоянно накапливаться)
   const currentComments = photoObjects[index].comments;
   currentComments.forEach((commentObject) =>{
     const currentComment = commentElement.cloneNode(true);
