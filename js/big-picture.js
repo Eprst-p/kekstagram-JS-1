@@ -3,6 +3,7 @@ import {photoObjects} from './gen-objects.js';
 const showBigPicture = function () {
   const bigPicture = document.querySelector('.big-picture');
   const fullPictureContainer = document.querySelectorAll('.picture');
+  const pictureContainer = document.querySelector('.pictures'); //второй раз объявляется такая переменная, может стоит ее взять из mini-pictures?
 
   const commentTemplate = document.querySelector('#comments_big_picture').content;
   const commentElement = commentTemplate.querySelector('.social__comment');
@@ -23,6 +24,61 @@ const showBigPicture = function () {
   };
 
 
+  const onPictureClick = function (evt) {
+    if (evt.target.closest('.picture')) {
+      bigPicture.classList.remove('hidden');
+      bigPicture.querySelector('.big-picture__img img').src = evt.target.closest('.picture__img').src;
+      bigPicture.querySelector('.likes-count').textContent = evt.target.child('.picture__likes').textContent;
+      bigPicture.querySelector('.comments-count').textContent = evt.target.closest('.picture__comments').textContent;
+      bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+      bigPicture.querySelector('.comments-loader').classList.add('hidden');
+
+      //bigPicture.querySelector('.social__caption').textContent = photoObjects[index].description;
+      document.querySelector('body').classList.add('modal-open');
+
+
+
+
+
+      /*
+      fullPictureContainer.forEach((picture, index) => {
+        console.log(picture);
+        console.log(index);
+        bigPicture.classList.remove('hidden');
+        bigPicture.querySelector('.big-picture__img img').src = picture.querySelector('.picture__img').src;
+        bigPicture.querySelector('.likes-count').textContent = picture.querySelector('.picture__likes').textContent;
+        bigPicture.querySelector('.comments-count').textContent = picture.querySelector('.picture__comments').textContent;
+        bigPicture.querySelector('.social__comment-count').classList.add('hidden');
+        bigPicture.querySelector('.comments-loader').classList.add('hidden');
+        bigPicture.querySelector('.social__caption').textContent = photoObjects[index].description;
+        document.querySelector('body').classList.add('modal-open');
+
+        bigPicture.querySelector('.big-picture__cancel').addEventListener('click', () => {
+          bigPicture.classList.add('hidden');
+          document.querySelector('body').classList.remove('modal-open');
+        });
+        document.addEventListener('keydown', (evt) => {
+          if (evt.keyCode === 27) {     //почему то зачеркнуто keyCode
+            bigPicture.classList.add('hidden');
+            document.querySelector('body').classList.remove('modal-open');
+          }
+        });
+        addComments(index);
+      });
+      */
+
+    }
+  };
+
+
+
+  pictureContainer.addEventListener('click', onPictureClick);
+
+
+
+
+
+  /* старая рабочая
   fullPictureContainer.forEach((picture, index) => {
     picture.addEventListener('click', () => {
       bigPicture.classList.remove('hidden');
@@ -47,6 +103,7 @@ const showBigPicture = function () {
       addComments(index);
     });
   });
+  */
 };
 
 export {showBigPicture};
