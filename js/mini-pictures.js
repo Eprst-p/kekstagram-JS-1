@@ -8,11 +8,12 @@ const fillMiniPictures = function () {
 
   const picturesFragment = document.createDocumentFragment();
 
-  photoObjects.forEach((currentObject) => {
+  photoObjects.forEach((currentObject, index) => {
     const currentPicture = pictureElement.cloneNode(true);
     currentPicture.querySelector('.picture__img').src = currentObject.url;
     currentPicture.querySelector('.picture__likes').textContent = currentObject.likes;
     currentPicture.querySelector('.picture__comments').textContent = currentObject.comments.length;
+    currentPicture.setAttribute('data-description', photoObjects[index].description);
     picturesFragment.appendChild(currentPicture);
   });
 

@@ -23,87 +23,38 @@ const showBigPicture = function () {
     commentsContainer.appendChild(commentFragment);
   };
 
-
   const onPictureClick = function (evt) {
     if (evt.target.closest('.picture')) {
+      const targetSearchArea = evt.target.closest('.picture');
       bigPicture.classList.remove('hidden');
-      bigPicture.querySelector('.big-picture__img img').src = evt.target.closest('.picture__img').src;
-      bigPicture.querySelector('.likes-count').textContent = evt.target.child('.picture__likes').textContent;
-      bigPicture.querySelector('.comments-count').textContent = evt.target.closest('.picture__comments').textContent;
+      bigPicture.querySelector('.big-picture__img img').src = targetSearchArea.querySelector('.picture__img').src;
+      bigPicture.querySelector('.likes-count').textContent = targetSearchArea.querySelector('.picture__likes').textContent;
+      bigPicture.querySelector('.comments-count').textContent = targetSearchArea.querySelector('.picture__comments').textContent;
+      bigPicture.querySelector('.comments-count').textContent = targetSearchArea.querySelector('.picture__comments').textContent;
       bigPicture.querySelector('.social__comment-count').classList.add('hidden');
       bigPicture.querySelector('.comments-loader').classList.add('hidden');
-
-      //bigPicture.querySelector('.social__caption').textContent = photoObjects[index].description;
+      bigPicture.querySelector('.social__caption').textContent = targetSearchArea.dataset.description;
       document.querySelector('body').classList.add('modal-open');
 
-
-
-
-
-      /*
-      fullPictureContainer.forEach((picture, index) => {
-        console.log(picture);
-        console.log(index);
-        bigPicture.classList.remove('hidden');
-        bigPicture.querySelector('.big-picture__img img').src = picture.querySelector('.picture__img').src;
-        bigPicture.querySelector('.likes-count').textContent = picture.querySelector('.picture__likes').textContent;
-        bigPicture.querySelector('.comments-count').textContent = picture.querySelector('.picture__comments').textContent;
-        bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-        bigPicture.querySelector('.comments-loader').classList.add('hidden');
-        bigPicture.querySelector('.social__caption').textContent = photoObjects[index].description;
-        document.querySelector('body').classList.add('modal-open');
-
-        bigPicture.querySelector('.big-picture__cancel').addEventListener('click', () => {
-          bigPicture.classList.add('hidden');
-          document.querySelector('body').classList.remove('modal-open');
-        });
-        document.addEventListener('keydown', (evt) => {
-          if (evt.keyCode === 27) {     //почему то зачеркнуто keyCode
-            bigPicture.classList.add('hidden');
-            document.querySelector('body').classList.remove('modal-open');
-          }
-        });
-        addComments(index);
-      });
-      */
-
-    }
-  };
-
-
-
-  pictureContainer.addEventListener('click', onPictureClick);
-
-
-
-
-
-  /* старая рабочая
-  fullPictureContainer.forEach((picture, index) => {
-    picture.addEventListener('click', () => {
-      bigPicture.classList.remove('hidden');
-      bigPicture.querySelector('.big-picture__img img').src = picture.querySelector('.picture__img').src;
-      bigPicture.querySelector('.likes-count').textContent = picture.querySelector('.picture__likes').textContent;
-      bigPicture.querySelector('.comments-count').textContent = picture.querySelector('.picture__comments').textContent;
-      bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-      bigPicture.querySelector('.comments-loader').classList.add('hidden');
-      bigPicture.querySelector('.social__caption').textContent = photoObjects[index].description;
-      document.querySelector('body').classList.add('modal-open');
+      const fullPictureContainerArray = Array.from(fullPictureContainer); //созадем массив из псевдомассива (иначе findIndex не работает)
+      const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.description === targetSearchArea.dataset.description);
+      addComments(targetIndex);
 
       bigPicture.querySelector('.big-picture__cancel').addEventListener('click', () => {
         bigPicture.classList.add('hidden');
         document.querySelector('body').classList.remove('modal-open');
       });
-      document.addEventListener('keydown', (evt) => {
+      document.addEventListener('keydown', (evt) => {   //без этого evt не работает
         if (evt.keyCode === 27) {     //почему то зачеркнуто keyCode
           bigPicture.classList.add('hidden');
           document.querySelector('body').classList.remove('modal-open');
         }
       });
-      addComments(index);
-    });
-  });
-  */
+    }
+  };
+
+  pictureContainer.addEventListener('click', onPictureClick);
+
 };
 
 export {showBigPicture};
