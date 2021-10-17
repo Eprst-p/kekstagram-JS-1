@@ -14,6 +14,7 @@ const fillMiniPictures = function () {
     currentPicture.querySelector('.picture__likes').textContent = currentObject.likes;
     currentPicture.querySelector('.picture__comments').textContent = currentObject.comments.length;
     currentPicture.setAttribute('data-description', photoObjects[index].description);
+    currentPicture.setAttribute('data-unique-id', index);
     picturesFragment.appendChild(currentPicture);
   });
 

@@ -1,4 +1,6 @@
 import {photoObjects} from './gen-objects.js';
+import {isEscapeKey} from './utilities.js';
+
 
 const showBigPicture = function () {
   const bigPicture = document.querySelector('.big-picture');
@@ -37,23 +39,30 @@ const showBigPicture = function () {
       document.querySelector('body').classList.add('modal-open');
 
       const fullPictureContainerArray = Array.from(fullPictureContainer); //созадем массив из псевдомассива (иначе findIndex не работает)
-      const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.description === targetSearchArea.dataset.description);
+      const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
 
-      bigPicture.querySelector('.big-picture__cancel').addEventListener('click', () => {
+      const onCloseButtonClick = function () {
         bigPicture.classList.add('hidden');
         document.querySelector('body').classList.remove('modal-open');
-      });
-      document.addEventListener('keydown', (evt) => {   //без этого evt не работает
-        if (evt.keyCode === 27) {     //почему то зачеркнуто keyCode
+        document.removeEventListener('keydown', onCloseButtonEscKey); //удаляет второй обработчик с Esc. Как быть с линтером тут?
+      };
+      bigPicture.querySelector('.big-picture__cancel').addEventListener('click', onCloseButtonClick, {once: true});
+
+
+      const onCloseButtonEscKey = function (evtKey) {
+        if (isEscapeKey) {
+          evtKey.preventDefault();
           bigPicture.classList.add('hidden');
           document.querySelector('body').classList.remove('modal-open');
+          bigPicture.querySelector('.big-picture__cancel').removeEventListener('click', onCloseButtonClick); //удаляет второй обработчик с клика по кретсику
         }
-      });
+      };
+      document.addEventListener('keydown', onCloseButtonEscKey, {once: true});
     }
   };
 
-  pictureContainer.addEventListener('click', onPictureClick);
+  pictureContainer.addEventListener('click', onPictureClick); //основной обработчик не удаляю, т.к он вроде бы не копится. Если удалить - то ломается повторный вызов.
 
 };
 
