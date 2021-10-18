@@ -230,6 +230,18 @@
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
 
+    <!-- Шаблон добавления комментариев в полноэкранный режим -->
+    <template id="comments_big_picture">
+      <li class="social__comment">
+        <img
+            class="social__picture"
+            src="{{аватар}}"
+            alt="{{имя комментатора}}"
+            width="35" height="35">
+        <p class="social__text">{{текст комментария}}</p>
+    </li>
+    </template>
+
   <script src="js/main.js" type="module"></script>
 
 </body>
