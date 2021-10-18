@@ -10,7 +10,11 @@ const loadPhoto = function () {
     uploadOverlay.classList.remove('hidden');
     addBodyModalOpen();
 
-    cancelAndEscape(uploadOverlay, uploadCancelButton);
+    const cancelInputValue = function () {
+      uploadFile.value = '';
+      //какие-то другие формы нужно тоже сбросить (пока хз какие)
+    };
+    cancelAndEscape(uploadOverlay, uploadCancelButton, cancelInputValue);
 
   });
 

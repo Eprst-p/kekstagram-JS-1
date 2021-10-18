@@ -43,7 +43,7 @@ const showBigPicture = function () {
       const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
 
-      cancelAndEscape(bigPicture, bigPictureCancelButton);
+      cancelAndEscape(bigPicture, bigPictureCancelButton, () => {}); //передаем 3-м аргументом пустую функцию, т.к иначе ругается на 3-й аргумент. Пока не понял, как сделать лучше
     }
   };
 
