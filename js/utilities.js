@@ -23,7 +23,7 @@ const cancelAndEscape = function (overlay, cancelButton, otherFunctionality) {
     document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (позже запретить)
     otherFunctionality();
   };
-  cancelButton.addEventListener('click', onCloseButtonClick, {once: true});
+  cancelButton.addEventListener('click', onCloseButtonClick, {once: true});//может лучше сделать единообразное удаление обработчиков?
 
   const onEscKey = function (evtKey) {
     if (isEscapeKey) {
