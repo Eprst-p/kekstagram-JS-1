@@ -1,7 +1,8 @@
 import {cancelAndEscape, addBodyModalOpen} from './utilities.js';
 
+const formElement = document.querySelector('.img-upload__form');
+
 const loadPhoto = function () {
-  const formElement = document.querySelector('.img-upload__form');
   const uploadFile = formElement.querySelector('#upload-file');
   const uploadOverlay = formElement.querySelector('.img-upload__overlay');
   const uploadCancelButton = formElement.querySelector('#upload-cancel');
@@ -38,8 +39,11 @@ const loadPhoto = function () {
       //+какие-то другие формы нужно тоже сбросить (пока хз какие)
     };
     cancelAndEscape(uploadOverlay, uploadCancelButton, closeFormFunctional);
+
   };
   uploadFile.addEventListener('change', onUploadFileChange);
+
+
 
 
 
@@ -52,4 +56,4 @@ const loadPhoto = function () {
 
 };
 
-export {loadPhoto};
+export {loadPhoto, formElement};
