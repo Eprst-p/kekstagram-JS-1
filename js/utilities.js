@@ -21,22 +21,24 @@ const cancelAndEscape = function (overlay, cancelButton, otherFunctionality) {
     overlay.classList.add('hidden');
     removeBodyModalOpen();
     document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (позже запретить)
+    cancelButton.removeEventListener('click', onCloseButtonClick);
     otherFunctionality();
   };
-  cancelButton.addEventListener('click', onCloseButtonClick, {once: true});//может лучше сделать единообразное удаление обработчиков?
+  cancelButton.addEventListener('click', onCloseButtonClick);
 
-  const onEscKey = function (evtKey) {
-    if (isEscapeKey) {
-      evtKey.preventDefault();
+  const onEscKey = function (evt) {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
       overlay.classList.add('hidden');
       removeBodyModalOpen();
       cancelButton.removeEventListener('click', onCloseButtonClick);
+      document.removeEventListener('keydown', onEscKey);
       otherFunctionality();
     }
   };
-  document.addEventListener('keydown', onEscKey, {once: true});
+  document.addEventListener('keydown', onEscKey);
 
 
 };
 
-export {getRandomPositiveNumber, checkCommentLength, isEscapeKey, addBodyModalOpen, removeBodyModalOpen, cancelAndEscape};
+export {getRandomPositiveNumber, checkCommentLength, addBodyModalOpen, removeBodyModalOpen, cancelAndEscape, isEscapeKey};
