@@ -1,4 +1,4 @@
-import {cancelAndEscape, addBodyModalOpen, isEscapeKey} from './utilities.js';
+import {cancelAndEscape, addBodyModalOpen, isEscapeKey, checkCommentLength} from './utilities.js';
 
 
 const loadPhoto = function () {
@@ -17,9 +17,20 @@ const loadPhoto = function () {
   const effectList = uploadOverlay.querySelector('.effects__list');
   const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
 
-  //для хештегов
+  //для хештегов м комментов
   const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
   const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
+  const commentsTextArea = uploadOverlay.querySelector('.text__description');
+
+
+  //блок комментов
+  const onCommentsFieldInput = function () {
+    if (!checkCommentLength(commentsTextArea.value.length, 5)) {
+      commentsTextArea.setCustomValidity('Слишком длинный коментарий');
+      commentsTextArea.reportValidity();
+    }
+  };
+  commentsTextArea.addEventListener('input', onCommentsFieldInput);
 
 
   //блок хештегов
@@ -138,7 +149,6 @@ const loadPhoto = function () {
         unit = '';
         setDefaultEffect();
       }
-
     }
   };
 
@@ -148,45 +158,44 @@ const loadPhoto = function () {
     const sliderValue = slider.get(true);
     effectValueElement.value = sliderValue;
     uploadImg.style.filter = `${effect}(${sliderValue*coefficient}${unit})`;
-
   });
 
 
-  //общий блок при открытии формы
+  //общий блок при открытии и отправке формы
+  const allowedExtensions = ['png', 'jpg'];
+
   const onUploadFileChange = function () {
     uploadOverlay.classList.remove('hidden');
     addBodyModalOpen();
+    if (!allowedExtensions.includes(uploadFile.value.slice(-3))) {
+      uploadFile.setCustomValidity('Неверный формат');
+      uploadFile.reportValidity();
+    } else {
+      uploadFile.setCustomValidity('');
+      uploadFile.reportValidity();
+    }
 
-    const onHashtagFocus = function () {
-      hashtagsInput.addEventListener('keydown', (evt) => {
+    const onFieldFocus = function (field) {
+      field.addEventListener('keydown', (evt) => {
         if (isEscapeKey(evt)) {
           evt.stopPropagation();
         }
       });
     };
-    hashtagsInput.addEventListener('focus', onHashtagFocus);
+    hashtagsInput.addEventListener('focus', onFieldFocus(hashtagsInput));
+    commentsTextArea.addEventListener('focus', onFieldFocus(commentsTextArea));
 
     const closeFormFunctional = function () {
       uploadFile.value = '';
       scaleValueElement.value = '100%';
       uploadImg.style.transform = 'scale(1.0)'; //сброс на дефолтный масштаб, иначе одно и то же изображение будет стартовать с предыдущим масштабом
       //+какие-то другие формы нужно тоже сбросить (пока хз какие)
-      hashtagsInput.removeEventListener('focus', onHashtagFocus);
+      hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
+      commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
     };
     cancelAndEscape(uploadOverlay, uploadCancelButton, closeFormFunctional);
   };
   uploadFile.addEventListener('change', onUploadFileChange);
-
-
-
-
-
-
-  /*
-  formElement.addEventListener('submit', () => {
-    console.log('Form load');
-  });
-  */
 
 };
 
