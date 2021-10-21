@@ -62,7 +62,7 @@ const createPhoto = function (index) {
     url: `photos/${  index + 1  }.jpg`,
     description: PHOTO_DESCRIPTIONS[index],
     likes: getRandomPositiveNumber(15,200),
-    comments: Array.from({length: getRandomPositiveNumber(1,5)}, createComment), //количество комментов рандомно: 1-5 (сам выдумал)
+    comments: Array.from({length: getRandomPositiveNumber(1,25)}, createComment), //увеличил количество комментов до 25
   };
 };
 
