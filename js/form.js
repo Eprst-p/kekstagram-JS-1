@@ -25,7 +25,7 @@ const loadPhoto = function () {
 
   //блок комментов
   const onCommentsFieldInput = function () {
-    if (!checkCommentLength(commentsTextArea.value.length, 5)) {
+    if (!checkCommentLength(commentsTextArea.value.length, 140)) {
       commentsTextArea.setCustomValidity('Слишком длинный коментарий');
       commentsTextArea.reportValidity();
     }
@@ -139,13 +139,13 @@ const loadPhoto = function () {
       }
       if (checkEffect('#effect-phobos')) {
         effect ='blur';
-        coefficient = 0.33333333;
+        coefficient = 0.033333333;
         unit = 'px';
         setDefaultEffect();
       }
       if (checkEffect('#effect-heat')) {
         effect ='brightness';
-        coefficient = 0.33333333;
+        coefficient = 0.033333333;
         unit = '';
         setDefaultEffect();
       }
