@@ -12,5 +12,33 @@ function checkCommentLength (commentLength, maxCommentLength) {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
+const addBodyModalOpen = () => document.querySelector('body').classList.add('modal-open');
+const removeBodyModalOpen = () => document.querySelector('body').classList.remove('modal-open');
 
-export {getRandomPositiveNumber, checkCommentLength, isEscapeKey};
+
+const cancelAndEscape = function (overlay, cancelButton, otherFunctionality) {
+  const onCloseButtonClick = function () {
+    overlay.classList.add('hidden');
+    removeBodyModalOpen();
+    document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (позже запретить)
+    cancelButton.removeEventListener('click', onCloseButtonClick);
+    otherFunctionality();
+  };
+  cancelButton.addEventListener('click', onCloseButtonClick);
+
+  const onEscKey = function (evt) {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      overlay.classList.add('hidden');
+      removeBodyModalOpen();
+      cancelButton.removeEventListener('click', onCloseButtonClick);
+      document.removeEventListener('keydown', onEscKey);
+      otherFunctionality();
+    }
+  };
+  document.addEventListener('keydown', onEscKey);
+
+
+};
+
+export {getRandomPositiveNumber, checkCommentLength, addBodyModalOpen, removeBodyModalOpen, cancelAndEscape, isEscapeKey};
