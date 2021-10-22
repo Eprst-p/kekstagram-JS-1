@@ -37,7 +37,6 @@ const showBigPicture = function () {
       comment.classList.add('hidden');
     });
     let shownComments = 0;
-    const allComments = comments.length;
     const showFiveComments = function () {
       let count = 0;
       for (let i=0; i<comments.length; i++) {
@@ -49,10 +48,10 @@ const showBigPicture = function () {
           comment.classList.remove('hidden');
           count++;
           shownComments++;
-          commentsCount.textContent = `${shownComments} из ${allComments}`;
+          commentsCount.textContent = `${shownComments} из ${comments.length}`;
         }
         if (i === comments.length - 1) {
-          //commentLoadButton.classList.add('hidden');//без этого поведение вроде бы правильное. С удалением класса тоже правильное. Но стоит класс возвращать - ломается странным образом.
+          commentLoadButton.classList.add('hidden');
         }
       }
     };
@@ -61,7 +60,12 @@ const showBigPicture = function () {
     const onLoadCommentsClick = function () {
       showFiveComments();
     };
-    commentLoadButton.addEventListener('click', onLoadCommentsClick); //почему то не копится этот обработчик, хотя вроде должен. Нужно ли его удалять?
+    commentLoadButton.addEventListener('click', onLoadCommentsClick);
+
+    const closeFunctional = function () {
+      commentLoadButton.removeEventListener('click', onLoadCommentsClick);
+    };
+    cancelAndEscape(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
   };
 
 
@@ -74,15 +78,13 @@ const showBigPicture = function () {
       bigPicture.querySelector('.likes-count').textContent = targetSearchArea.querySelector('.picture__likes').textContent;
       bigPicture.querySelector('.social__caption').textContent = targetSearchArea.dataset.description;
       addBodyModalOpen();
-      //commentLoadButton.classList.remove('hidden');// с этой строчкой ломается поведение - кнопка воссатнавливается, но вновь начинает скрываться при первом же нажатии в новом окне.
+      commentLoadButton.classList.remove('hidden');
 
       const fullPictureContainerArray = Array.from(fullPictureContainer); //созадем массив из псевдомассива (иначе findIndex не работает)
       const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
       showComments();
 
-      const closeFunctional = function () {};//пока пустая
-      cancelAndEscape(bigPicture, bigPictureCancelButton, closeFunctional);
     }
   };
 
