@@ -11,7 +11,11 @@ const showBigPicture = function () {
   const commentTemplate = document.querySelector('#comments_big_picture').content;
   const commentElement = commentTemplate.querySelector('.social__comment');
   const commentsContainer = bigPicture.querySelector('.social__comments');
+  const commentLoadButton = bigPicture.querySelector('.social__comments-loader');
+  const commentsCount = bigPicture.querySelector('.social__comment-count');
 
+
+  //добавляем комменты
   const addComments = function (index) {
     const commentFragment = document.createDocumentFragment();
     commentsContainer.innerHTML = ''; //очищаем старые комменты (иначе при клике они будут постоянно накапливаться)
@@ -26,24 +30,61 @@ const showBigPicture = function () {
     commentsContainer.appendChild(commentFragment);
   };
 
+  //отображение комментов
+  const showComments = function () {
+    const comments = commentsContainer.querySelectorAll('.social__comment');
+    comments.forEach((comment)=>{
+      comment.classList.add('hidden');
+    });
+    let shownComments = 0;
+    const showFiveComments = function () {
+      let count = 0;
+      for (let i=0; i<comments.length; i++) {
+        const comment = comments[i];
+        if (count === 5) {
+          break;
+        }
+        if (comment.classList[1] === 'hidden') {
+          comment.classList.remove('hidden');
+          count++;
+          shownComments++;
+          commentsCount.textContent = `${shownComments} из ${comments.length}`;
+        }
+        if (i === comments.length - 1) {
+          commentLoadButton.classList.add('hidden');
+        }
+      }
+    };
+    showFiveComments();
+
+    const onLoadCommentsClick = function () {
+      showFiveComments();
+    };
+    commentLoadButton.addEventListener('click', onLoadCommentsClick);
+
+    const closeFunctional = function () {
+      commentLoadButton.removeEventListener('click', onLoadCommentsClick);
+    };
+    cancelAndEscape(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
+  };
+
+
+  //открытие большой картинки
   const onPictureClick = function (evt) {
     if (evt.target.closest('.picture')) {
       const targetSearchArea = evt.target.closest('.picture');
       bigPicture.classList.remove('hidden');
       bigPicture.querySelector('.big-picture__img img').src = targetSearchArea.querySelector('.picture__img').src;
       bigPicture.querySelector('.likes-count').textContent = targetSearchArea.querySelector('.picture__likes').textContent;
-      bigPicture.querySelector('.comments-count').textContent = targetSearchArea.querySelector('.picture__comments').textContent;
-      bigPicture.querySelector('.comments-count').textContent = targetSearchArea.querySelector('.picture__comments').textContent;
-      bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-      bigPicture.querySelector('.comments-loader').classList.add('hidden');
       bigPicture.querySelector('.social__caption').textContent = targetSearchArea.dataset.description;
       addBodyModalOpen();
+      commentLoadButton.classList.remove('hidden');
 
       const fullPictureContainerArray = Array.from(fullPictureContainer); //созадем массив из псевдомассива (иначе findIndex не работает)
       const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
+      showComments();
 
-      cancelAndEscape(bigPicture, bigPictureCancelButton, () => {}); //передаем 3-м аргументом пустую функцию, т.к иначе ругается на 3-й аргумент. Пока не понял, как сделать лучше
     }
   };
 
