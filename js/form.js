@@ -36,7 +36,7 @@ const loadPhoto = function () {
   //блок хештегов
   const onHashtagFieldInput = function() {
     const hashtags = hashtagsInput.value.toLowerCase().split(' ');
-    for (let i = 0; i < hashtags.length; i++) { //с forEach такая тема не работает как надо
+    for (let i = 0; i < hashtags.length; i++) {
       const hashtag = hashtags[i];
       const otherHashtags = hashtags.slice(0, i).concat(hashtags.slice(i+1));
       const createValidityMessage = function (message) {
@@ -175,6 +175,8 @@ const loadPhoto = function () {
 
   const onUploadFileChange = function () {
     uploadOverlay.classList.remove('hidden');
+    sliderField.classList.add('hidden');
+    uploadImg.style.filter = 'none';
     addBodyModalOpen();
     if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
       uploadFile.setCustomValidity('Неверный формат');
@@ -197,10 +199,8 @@ const loadPhoto = function () {
     const closeFormFunctional = function () {
       uploadFile.value = '';
       scaleValueElement.value = '100%';
-      uploadImg.style.transform = 'scale(1.0)'; //сброс на дефолтный масштаб, иначе одно и то же изображение будет стартовать с предыдущим масштабом
+      uploadImg.style.transform = 'scale(1.0)';
       //+какие-то другие формы нужно тоже сбросить (пока хз какие)
-      uploadImg.style.filter = 'none';
-      slider.set(100);
       hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
       commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
     };
