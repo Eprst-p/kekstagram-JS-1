@@ -1,7 +1,7 @@
 import {getData} from './server-fetch.js';
 import {fillMiniPictures} from './mini-pictures.js';
 import {showBigPicture} from './big-picture.js';
-import {loadPhoto} from './form.js';
+import {createForm, loadForm} from './form.js';
 
 
 getData((photosFromServer) => {
@@ -9,12 +9,5 @@ getData((photosFromServer) => {
   showBigPicture(photosFromServer);
 });
 
-
-loadPhoto();
-
-
-
-
-
-
-
+createForm();
+loadForm();

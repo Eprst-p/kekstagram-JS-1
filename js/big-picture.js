@@ -1,4 +1,4 @@
-import {addBodyModalOpen, cancelAndEscape} from './utilities.js';
+import {addBodyModalOpen, createCloseAndAndEscapeListeners} from './utilities.js';
 
 
 const showBigPicture = function (photoObjects) {
@@ -64,7 +64,7 @@ const showBigPicture = function (photoObjects) {
     const closeFunctional = function () {
       commentLoadButton.removeEventListener('click', onLoadCommentsClick);
     };
-    cancelAndEscape(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
+    createCloseAndAndEscapeListeners(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
   };
 
 
