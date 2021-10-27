@@ -1,4 +1,5 @@
-import {createCloseAndAndEscapeListeners, addBodyModalOpen, isEscapeKey, checkCommentLength, removeBodyModalOpen} from './utilities.js';
+import {createCloseAndEscapeListeners, addBodyModalOpen, isEscapeKey, checkCommentLength, removeBodyModalOpen} from './utilities.js';
+import {showSuccesMessage, showErrorMessage} from './errors-succes.js';
 import {sendData} from './server-fetch.js';
 
 
@@ -31,7 +32,7 @@ const onFieldFocus = function (field) {
   });
 };
 
-//функционал при закрытии формы
+//функционал при закрытии окон
 const closeFormFunctional = function () {
   uploadFile.value = '';
   scaleValueElement.value = '100%';
@@ -41,7 +42,22 @@ const closeFormFunctional = function () {
   commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
 };
 
+//функционал для успеха/ошибки
+const succesFormSubmit = function () {
+  uploadOverlay.classList.add('hidden');
+  removeBodyModalOpen();
+  closeFormFunctional();
+  showSuccesMessage();
+};
 
+const errorFormSubmit = function () {
+  uploadOverlay.classList.add('hidden');
+  removeBodyModalOpen();
+  closeFormFunctional();
+  showErrorMessage();
+};
+
+//блок формы
 const createForm = function () {
 
   //блок комментов
@@ -191,48 +207,43 @@ const createForm = function () {
     effectValueElement.value = sliderValue;
     uploadImg.style.filter = `${effect}(${sliderValue}${unit})`;
   });
-
-
-  //общий блок при открытии и отправке формы
-  const allowedExtensions = ['png', 'jpg'];
-
-  const onUploadFileChange = function () {
-    uploadOverlay.classList.remove('hidden');
-    sliderField.classList.add('hidden');
-    uploadImg.style.filter = 'none';
-    addBodyModalOpen();
-    if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
-      uploadFile.setCustomValidity('Неверный формат');
-      uploadFile.reportValidity();
-    } else {
-      uploadFile.setCustomValidity('');
-      uploadFile.reportValidity();
-    }
-
-    createCloseAndAndEscapeListeners(uploadOverlay, uploadCancelButton, closeFormFunctional);
-  };
-  uploadFile.addEventListener('change', onUploadFileChange);
 };
 
-const closeForm = function () { //не совсем соблюдается принцип DRY, но пока по другому не получается
-  uploadOverlay.classList.add('hidden');
-  removeBodyModalOpen();
-  closeFormFunctional();
+//общий блок при открытии и отправке формы
+const allowedExtensions = ['png', 'jpg'];
+
+const onOpenFormMisc = () => {
+  uploadOverlay.classList.remove('hidden');
+  sliderField.classList.add('hidden');
+  uploadImg.style.filter = 'none';
+  addBodyModalOpen();
 };
+
+const onUploadFileChange = function () {
+  onOpenFormMisc();
+  if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
+    uploadFile.setCustomValidity('Неверный формат');
+    uploadFile.reportValidity();
+  } else {
+    uploadFile.setCustomValidity('');
+    uploadFile.reportValidity();
+  }
+  createCloseAndEscapeListeners(uploadOverlay, uploadCancelButton, closeFormFunctional);
+};
+uploadFile.addEventListener('change', onUploadFileChange);
+
 
 const loadForm = function () {
   const onFormSubmit = function (evt) {
     evt.preventDefault();
 
     sendData(
-      () => closeForm(),
+      () => succesFormSubmit(),
+      () => errorFormSubmit(),
       new FormData(formElement),
     );
-
-
   };
-
   formElement.addEventListener('submit', onFormSubmit);
 };
 
-export {createForm, loadForm};
+export {createForm, loadForm, onOpenFormMisc, allowedExtensions, uploadOverlay, uploadCancelButton, closeFormFunctional};

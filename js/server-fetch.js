@@ -6,7 +6,7 @@ const getData = (onSucces) => {
     });
 };
 
-const sendData = (onSuccess, formData) => fetch(
+const sendData = (onSuccess, onError, formData) => fetch(
   'https://24.javascript.pages.academy/kekstagram',
   {
     method: 'POST',
@@ -15,10 +15,9 @@ const sendData = (onSuccess, formData) => fetch(
 )
   .then((response) => {
     if (response.ok) {
-      console.log('успешный успех');
       onSuccess();
     } else {
-      throw new Error(`${response.status} ${response.statusText}`);
+      onError();
     }
 
   })
