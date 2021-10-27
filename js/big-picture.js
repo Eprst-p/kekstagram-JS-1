@@ -1,8 +1,7 @@
-import {photoObjects} from './gen-objects.js';
 import {addBodyModalOpen, cancelAndEscape} from './utilities.js';
 
 
-const showBigPicture = function () {
+const showBigPicture = function (photoObjects) {
   const bigPicture = document.querySelector('.big-picture');
   const fullPictureContainer = document.querySelectorAll('.picture');
   const pictureContainer = document.querySelector('.pictures');

@@ -1,6 +1,5 @@
-import {photoObjects} from './gen-objects.js';
 
-const fillMiniPictures = function () {
+const fillMiniPictures = function (photoObjects) {
   const pictureTemplate = document.querySelector('#picture').content;
   const pictureElement = pictureTemplate.querySelector('.picture');
   const pictureContainer = document.querySelector('.pictures');
