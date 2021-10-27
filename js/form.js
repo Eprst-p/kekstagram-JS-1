@@ -36,7 +36,7 @@ const loadPhoto = function () {
   //блок хештегов
   const onHashtagFieldInput = function() {
     const hashtags = hashtagsInput.value.toLowerCase().split(' ');
-    for (let i = 0; i < hashtags.length; i++) { //с forEach такая тема не работает как надо
+    for (let i = 0; i < hashtags.length; i++) {
       const hashtag = hashtags[i];
       const otherHashtags = hashtags.slice(0, i).concat(hashtags.slice(i+1));
       const createValidityMessage = function (message) {
@@ -87,13 +87,12 @@ const loadPhoto = function () {
       scaleValueElement.value = `${scaleValue + 25}%`;
       uploadImg.style.transform = `scale(${+scaleValueElement.value.slice(0,-1) / 100})`;
     }
-
   };
   scaleField.addEventListener('click', onScaleClick);
 
 
   //блок эффектов
-  const slider = noUiSlider.create(sliderElement, { //не получается изменять опции в дальнейшем почему то
+  const slider = noUiSlider.create(sliderElement, {
     start: 100,
     connect: [true, false],
     step: 1,
@@ -101,7 +100,6 @@ const loadPhoto = function () {
   });
 
   let effect = 'none';
-  let coefficient = 1;
   let unit = '';
   const onEffectChange = function (evt) {
     if (evt.target.closest('.effects__item')) {
@@ -110,10 +108,21 @@ const loadPhoto = function () {
         return targetSearchArea.querySelector(effectType);
       };
 
+      const updateSliderOptions = function (rangeMin, rangeMax, step) {
+        sliderElement.noUiSlider.updateOptions({
+          range: {
+            'min': rangeMin,
+            'max': rangeMax,
+          },
+          step: step,
+        });
+        slider.set(rangeMax);
+      };
+
       const setDefaultEffect = () => {
         sliderField.classList.remove('hidden');
-        slider.set(100);
-        uploadImg.style.filter = `${effect}(${slider.get(true)*coefficient}${unit})`;};
+        uploadImg.style.filter = `${effect}(${slider.get(true)}${unit})`;
+      };
 
       if (checkEffect('#effect-none')) {
         sliderField.classList.add('hidden');
@@ -121,32 +130,32 @@ const loadPhoto = function () {
       }
       if (checkEffect('#effect-chrome')) {
         effect = 'grayscale';
-        coefficient = 0.01;
         unit = '';
+        updateSliderOptions(0, 1, 0.1);
         setDefaultEffect();
       }
       if (checkEffect('#effect-sepia')) {
         effect ='sepia';
-        coefficient = 0.01;
         unit = '';
+        updateSliderOptions(0, 1, 0.1);
         setDefaultEffect();
       }
       if (checkEffect('#effect-marvin')) {
         effect ='invert';
-        coefficient = 1;
         unit = '%';
+        updateSliderOptions(0, 100, 1);
         setDefaultEffect();
       }
       if (checkEffect('#effect-phobos')) {
         effect ='blur';
-        coefficient = 0.033333333;
         unit = 'px';
+        updateSliderOptions(0, 3, 0.1);
         setDefaultEffect();
       }
       if (checkEffect('#effect-heat')) {
         effect ='brightness';
-        coefficient = 0.033333333;
         unit = '';
+        updateSliderOptions(1, 3, 0.1);
         setDefaultEffect();
       }
     }
@@ -154,10 +163,10 @@ const loadPhoto = function () {
 
   effectList.addEventListener('change', onEffectChange);
 
-  sliderElement.noUiSlider.on('change', () => {   //не могу навесить addEventListener почему-то сюда ,вместо on.
+  sliderElement.noUiSlider.on('update', () => {
     const sliderValue = slider.get(true);
     effectValueElement.value = sliderValue;
-    uploadImg.style.filter = `${effect}(${sliderValue*coefficient}${unit})`;
+    uploadImg.style.filter = `${effect}(${sliderValue}${unit})`;
   });
 
 
@@ -166,6 +175,8 @@ const loadPhoto = function () {
 
   const onUploadFileChange = function () {
     uploadOverlay.classList.remove('hidden');
+    sliderField.classList.add('hidden');
+    uploadImg.style.filter = 'none';
     addBodyModalOpen();
     if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
       uploadFile.setCustomValidity('Неверный формат');
@@ -188,17 +199,14 @@ const loadPhoto = function () {
     const closeFormFunctional = function () {
       uploadFile.value = '';
       scaleValueElement.value = '100%';
-      uploadImg.style.transform = 'scale(1.0)'; //сброс на дефолтный масштаб, иначе одно и то же изображение будет стартовать с предыдущим масштабом
+      uploadImg.style.transform = 'scale(1.0)';
       //+какие-то другие формы нужно тоже сбросить (пока хз какие)
-      uploadImg.style.filter = 'none';
-      slider.set(100);
       hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
       commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
     };
     cancelAndEscape(uploadOverlay, uploadCancelButton, closeFormFunctional);
   };
   uploadFile.addEventListener('change', onUploadFileChange);
-
 };
 
 export {loadPhoto};
