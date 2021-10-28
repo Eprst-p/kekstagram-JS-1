@@ -1,53 +1,70 @@
-import {onOpenFormMisc, allowedExtensions, uploadOverlay, uploadCancelButton, closeFormFunctional} from './form.js';
 import {createCloseAndEscapeListeners} from './utilities.js';
 
 //успешный успех
+const sectionToAdd = document.querySelector('body');
+
 const successTemplate = document.querySelector('#success').content;
 const successElement = successTemplate.querySelector('.success');
-const sectionToAdd = document.querySelector('main');
-const succesElementClone = successElement.cloneNode(true);
+const successElementClone = successElement.cloneNode(true);
+const successSideSpace = successElementClone.closest('.success');
+const successDiv = successElementClone.querySelector('.success__inner');
+const coolButton = successElementClone.querySelector('.success__button');
+
 
 //ошибочка
 const errorTemplate = document.querySelector('#error').content;
 const errorElement = errorTemplate.querySelector('.error');
 const errorElementClone = errorElement.cloneNode(true);
-const uploadFileError = errorElementClone.querySelector('#upload-file-error');
+const errorSideSpace = errorElementClone.closest('.error');
+const errorDiv = errorElementClone.querySelector('.error__inner');
+const errorButton = errorElementClone.querySelector('.error__button');
 
 
 //сообщение об успехе
 const showSuccesMessage = () => {
-  const coolButton = succesElementClone.querySelector('.success__button');
-  sectionToAdd.appendChild(succesElementClone);
-  succesElementClone.classList.remove('hidden');
-
-  const onCoolButtonClick = () => {
-    succesElementClone.classList.add('hidden');
-    coolButton.removeEventListener('click', onCoolButtonClick);
+  sectionToAdd.appendChild(successElementClone);
+  successElementClone.classList.remove('hidden');
+  const closeSuccessMessage = () => {
+    successElementClone.classList.add('hidden');
+    successSideSpace.removeEventListener('click', onSuccesSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался. Можно вынести в отдельный модуль, но это хуже читаемо
+    successDiv.removeEventListener('click', onSuccesDivClick);
   };
-  coolButton.addEventListener('click', onCoolButtonClick);
+
+  createCloseAndEscapeListeners(successElementClone, coolButton, closeSuccessMessage);
+
+  const onSuccesSideSpaceClick = () => {
+    closeSuccessMessage();
+  };
+  const onSuccesDivClick = (evt) => {
+    evt.stopPropagation();
+  };
+
+  successSideSpace.addEventListener('click', onSuccesSideSpaceClick);
+  successDiv.addEventListener('click', onSuccesDivClick);
 };
 
 
 //сообщение об ошибке
 const showErrorMessage = () => {
-  //const errorButton = errorElementClone.querySelector('.error__button');
   sectionToAdd.appendChild(errorElementClone);
   errorElementClone.classList.remove('hidden');
-
-  const onUploadFileChangeError = function () { //не работает кнопка, не пойму почему
+  const closeErrorMessage = () => {
     errorElementClone.classList.add('hidden');
-    onOpenFormMisc();
-    if (!allowedExtensions.includes(uploadFileError.value.toLowerCase().slice(-3))) {
-      uploadFileError.setCustomValidity('Неверный формат');
-      uploadFileError.reportValidity();
-    } else {
-      uploadFileError.setCustomValidity('');
-      uploadFileError.reportValidity();
-    }
-    createCloseAndEscapeListeners(uploadOverlay, uploadCancelButton, closeFormFunctional);
+    errorSideSpace.removeEventListener('click', onErrorSideSpaceClick); //аналогично
+    errorDiv.removeEventListener('click', onErrorDivClick);
   };
-  uploadFileError.addEventListener('change', onUploadFileChangeError);
 
+  createCloseAndEscapeListeners(errorElementClone, errorButton, closeErrorMessage);
+
+  const onErrorSideSpaceClick = () => {
+    closeErrorMessage();
+  };
+  const onErrorDivClick = (evt) => {
+    evt.stopPropagation();
+  };
+
+  errorSideSpace.addEventListener('click', onErrorSideSpaceClick);
+  errorDiv.addEventListener('click', onErrorDivClick);
 };
 
 export {showSuccesMessage, showErrorMessage};

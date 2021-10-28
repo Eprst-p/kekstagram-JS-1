@@ -212,7 +212,7 @@ const createForm = function () {
 //общий блок при открытии и отправке формы
 const allowedExtensions = ['png', 'jpg'];
 
-const onOpenFormMisc = () => {
+const setFieldsToDeafault = () => {
   uploadOverlay.classList.remove('hidden');
   sliderField.classList.add('hidden');
   uploadImg.style.filter = 'none';
@@ -220,7 +220,7 @@ const onOpenFormMisc = () => {
 };
 
 const onUploadFileChange = function () {
-  onOpenFormMisc();
+  setFieldsToDeafault();
   if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
     uploadFile.setCustomValidity('Неверный формат');
     uploadFile.reportValidity();
@@ -246,4 +246,4 @@ const loadForm = function () {
   formElement.addEventListener('submit', onFormSubmit);
 };
 
-export {createForm, loadForm, onOpenFormMisc, allowedExtensions, uploadOverlay, uploadCancelButton, closeFormFunctional};
+export {createForm, loadForm};
