@@ -11,13 +11,24 @@ const successDiv = successElementClone.querySelector('.success__inner');
 const coolButton = successElementClone.querySelector('.success__button');
 
 
-//ошибочка
+//ошибочка при отправке
 const errorTemplate = document.querySelector('#error').content;
 const errorElement = errorTemplate.querySelector('.error');
 const errorElementClone = errorElement.cloneNode(true);
 const errorSideSpace = errorElementClone.closest('.error');
 const errorDiv = errorElementClone.querySelector('.error__inner');
 const errorButton = errorElementClone.querySelector('.error__button');
+
+//ошибочка при загрузке с сервера (ну почти сам придумал дизайн, да-да:))
+const errorServerElementClone = errorElement.cloneNode(true);
+const errorServerSideSpace = errorServerElementClone.closest('.error');
+const errorServerDiv = errorServerElementClone.querySelector('.error__inner');
+errorServerDiv.style.color = '#f3de7f';
+errorServerDiv.style.backgroundColor = '#5f0d0d';
+const errorServerButton = errorServerElementClone.querySelector('.error__button');
+errorServerButton.textContent = 'Здесь ваши полномочия всё';
+const errorServerTitle = errorServerElementClone.querySelector('.error__title');
+errorServerTitle.textContent = 'Ошибка сервера';
 
 
 //сообщение об успехе
@@ -67,4 +78,28 @@ const showErrorMessage = () => {
   errorDiv.addEventListener('click', onErrorDivClick);
 };
 
-export {showSuccesMessage, showErrorMessage};
+//ошибка сервера
+const showServerErrorMessage = () => {
+  sectionToAdd.appendChild(errorServerElementClone);
+  errorServerElementClone.classList.remove('hidden');
+  const closeErrorMessage = () => {
+    errorServerElementClone.classList.add('hidden');
+    errorServerSideSpace.removeEventListener('click', onErrorServerSideSpaceClick); //аналогично
+    errorServerDiv.removeEventListener('click', onErrorServerDivClick);
+  };
+
+  createCloseAndEscapeListeners(errorServerElementClone, errorServerButton, closeErrorMessage);
+
+  const onErrorServerSideSpaceClick = () => {
+    closeErrorMessage();
+  };
+  const onErrorServerDivClick = (evt) => {
+    evt.stopPropagation();
+  };
+
+  errorServerSideSpace.addEventListener('click', onErrorServerSideSpaceClick);
+  errorServerDiv.addEventListener('click', onErrorServerDivClick);
+};
+
+
+export {showSuccesMessage, showErrorMessage, showServerErrorMessage};

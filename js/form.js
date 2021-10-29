@@ -11,10 +11,10 @@ const uploadCancelButton = formElement.querySelector('#upload-cancel');
 
 //для редактирования изображения
 const scaleField = uploadOverlay.querySelector('.img-upload__scale');
-const scaleValueElement = scaleField.querySelector('input[name="scale"]');
+const scaleValueInput = scaleField.querySelector('input[name="scale"]');
 const uploadImg = uploadOverlay.querySelector('.img-upload__preview img');
 const sliderElement = uploadOverlay.querySelector('.effect-level__slider');
-const effectValueElement = uploadOverlay.querySelector('input[name="effect-level"]');
+const effectValueInput = uploadOverlay.querySelector('input[name="effect-level"]');
 const effectList = uploadOverlay.querySelector('.effects__list');
 const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
 
@@ -32,12 +32,19 @@ const onFieldFocus = function (field) {
   });
 };
 
+//возвращение полей и эффектов на значения по умолчанию
+const setFieldsToDeafault = () => {
+  formElement.reset();
+  sliderField.classList.add('hidden');
+  uploadImg.style.filter = 'none';
+  uploadImg.style.transform = 'scale(1.0)';
+
+};
+
 //функционал при закрытии окон
 const closeFormFunctional = function () {
+  setFieldsToDeafault();
   uploadFile.value = '';
-  scaleValueElement.value = '100%';
-  uploadImg.style.transform = 'scale(1.0)';
-  //+какие-то другие формы нужно тоже сбросить (пока хз какие)
   hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
   commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
 };
@@ -48,6 +55,7 @@ const succesFormSubmit = function () {
   removeBodyModalOpen();
   closeFormFunctional();
   showSuccesMessage();
+  setFieldsToDeafault();
 };
 
 const errorFormSubmit = function () {
@@ -117,14 +125,14 @@ const createForm = function () {
 
   //блок масштаба
   const onScaleClick = function (evt) {
-    const scaleValue = +scaleValueElement.value.slice(0,-1);
+    const scaleValue = +scaleValueInput.value.slice(0,-1);
     if (evt.target.matches('.scale__control--smaller') && scaleValue > 25) {
-      scaleValueElement.value = `${scaleValue - 25}%`;
-      uploadImg.style.transform = `scale(${+scaleValueElement.value.slice(0,-1) / 100})`;
+      scaleValueInput.value = `${scaleValue - 25}%`;
+      uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
     if (evt.target.matches('.scale__control--bigger') && scaleValue < 100) {
-      scaleValueElement.value = `${scaleValue + 25}%`;
-      uploadImg.style.transform = `scale(${+scaleValueElement.value.slice(0,-1) / 100})`;
+      scaleValueInput.value = `${scaleValue + 25}%`;
+      uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
   };
   scaleField.addEventListener('click', onScaleClick);
@@ -204,7 +212,7 @@ const createForm = function () {
 
   sliderElement.noUiSlider.on('update', () => {
     const sliderValue = slider.get(true);
-    effectValueElement.value = sliderValue;
+    effectValueInput.value = sliderValue;
     uploadImg.style.filter = `${effect}(${sliderValue}${unit})`;
   });
 };
@@ -212,15 +220,11 @@ const createForm = function () {
 //общий блок при открытии и отправке формы
 const allowedExtensions = ['png', 'jpg'];
 
-const setFieldsToDeafault = () => {
-  uploadOverlay.classList.remove('hidden');
-  sliderField.classList.add('hidden');
-  uploadImg.style.filter = 'none';
-  addBodyModalOpen();
-};
 
 const onUploadFileChange = function () {
-  setFieldsToDeafault();
+  uploadOverlay.classList.remove('hidden');
+  addBodyModalOpen();
+
   if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
     uploadFile.setCustomValidity('Неверный формат');
     uploadFile.reportValidity();
