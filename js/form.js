@@ -69,8 +69,9 @@ const errorFormSubmit = function () {
 const createForm = function () {
 
   //блок комментов
+  const MAX_COMMENT_LENGTH = 140;
   const onCommentsFieldInput = function () {
-    if (!checkCommentLength(commentsTextArea.value.length, 140)) {
+    if (!checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
       commentsTextArea.setCustomValidity('Слишком длинный коментарий');
       commentsTextArea.reportValidity();
     }
@@ -219,14 +220,13 @@ const createForm = function () {
 };
 
 //общий блок при открытии и отправке формы
-const allowedExtensions = ['png', 'jpg'];
-
+const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 
 const onUploadFileChange = function () {
   uploadOverlay.classList.remove('hidden');
   addBodyModalOpen();
 
-  if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
+  if (!ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension))) {
     uploadFile.setCustomValidity('Неверный формат');
     uploadFile.reportValidity();
   } else {
