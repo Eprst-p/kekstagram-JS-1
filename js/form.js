@@ -168,8 +168,10 @@ const createForm = function () {
         slider.set(rangeMax);
       };
 
-      const setDefaultEffect = () => {
+      const setEffect = (effectName, unitSymbol) => {
         sliderField.classList.remove('hidden');
+        effect = effectName;
+        unit = unitSymbol;
         uploadImg.style.filter = `${effect}(${slider.get(true)}${unit})`;
       };
 
@@ -178,34 +180,24 @@ const createForm = function () {
         uploadImg.style.filter = 'none';
       }
       if (checkEffect('#effect-chrome')) {
-        effect = 'grayscale';
-        unit = '';
         updateSliderOptions(0, 1, 0.1);
-        setDefaultEffect();
+        setEffect('grayscale', '');
       }
       if (checkEffect('#effect-sepia')) {
-        effect ='sepia';
-        unit = '';
         updateSliderOptions(0, 1, 0.1);
-        setDefaultEffect();
+        setEffect('sepia', '');
       }
       if (checkEffect('#effect-marvin')) {
-        effect ='invert';
-        unit = '%';
         updateSliderOptions(0, 100, 1);
-        setDefaultEffect();
+        setEffect('invert', '%');
       }
       if (checkEffect('#effect-phobos')) {
-        effect ='blur';
-        unit = 'px';
         updateSliderOptions(0, 3, 0.1);
-        setDefaultEffect();
+        setEffect('blur', 'px');
       }
       if (checkEffect('#effect-heat')) {
-        effect ='brightness';
-        unit = '';
         updateSliderOptions(1, 3, 0.1);
-        setDefaultEffect();
+        setEffect('brightness', '');
       }
     }
   };
