@@ -116,6 +116,7 @@ const createForm = function () {
       }
       else {
         createValidityMessage('');
+        hashtagsInput.style.border = 'none';
       }
     }
   };

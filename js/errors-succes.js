@@ -31,74 +31,42 @@ const errorServerTitle = errorServerElementClone.querySelector('.error__title');
 errorServerTitle.textContent = 'Ошибка сервера';
 
 
-//сообщение об успехе
-const showSuccesMessage = () => {
-  sectionToAdd.appendChild(successElementClone);
-  successElementClone.classList.remove('hidden');
-  const closeSuccessMessage = () => {
-    successElementClone.classList.add('hidden');
-    successSideSpace.removeEventListener('click', onSuccesSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался. Можно вынести в отдельный модуль, но это хуже читаемо
-    successDiv.removeEventListener('click', onSuccesDivClick);
+//общяя функция вывода сообщения
+const showMessage = (elementClone, elementSideSpace, elementDiv, elementButton) => {
+  sectionToAdd.appendChild(elementClone);
+  elementClone.classList.remove('hidden');
+  const closeMessage = () => {
+    elementClone.classList.add('hidden');
+    elementSideSpace.removeEventListener('click', onSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался. Можно вынести в отдельный модуль, но это хуже читаемо
+    elementDiv.removeEventListener('click', onDivClick);
   };
 
-  createCloseAndEscapeListeners(successElementClone, coolButton, closeSuccessMessage);
+  createCloseAndEscapeListeners(elementClone, elementButton, closeMessage);
 
-  const onSuccesSideSpaceClick = () => {
-    closeSuccessMessage();
+  const onSideSpaceClick = () => {
+    closeMessage();
   };
-  const onSuccesDivClick = (evt) => {
+  const onDivClick = (evt) => {
     evt.stopPropagation();
   };
 
-  successSideSpace.addEventListener('click', onSuccesSideSpaceClick);
-  successDiv.addEventListener('click', onSuccesDivClick);
+  elementSideSpace.addEventListener('click', onSideSpaceClick);
+  elementDiv.addEventListener('click', onDivClick);
 };
 
+//сообщение об успехе
+const showSuccesMessage = () => {
+  showMessage(successElementClone, successSideSpace, successDiv, coolButton);
+};
 
 //сообщение об ошибке
 const showErrorMessage = () => {
-  sectionToAdd.appendChild(errorElementClone);
-  errorElementClone.classList.remove('hidden');
-  const closeErrorMessage = () => {
-    errorElementClone.classList.add('hidden');
-    errorSideSpace.removeEventListener('click', onErrorSideSpaceClick); //аналогично
-    errorDiv.removeEventListener('click', onErrorDivClick);
-  };
-
-  createCloseAndEscapeListeners(errorElementClone, errorButton, closeErrorMessage);
-
-  const onErrorSideSpaceClick = () => {
-    closeErrorMessage();
-  };
-  const onErrorDivClick = (evt) => {
-    evt.stopPropagation();
-  };
-
-  errorSideSpace.addEventListener('click', onErrorSideSpaceClick);
-  errorDiv.addEventListener('click', onErrorDivClick);
+  showMessage(errorElementClone, errorSideSpace, errorDiv, errorButton);
 };
 
 //ошибка сервера
 const showServerErrorMessage = () => {
-  sectionToAdd.appendChild(errorServerElementClone);
-  errorServerElementClone.classList.remove('hidden');
-  const closeErrorMessage = () => {
-    errorServerElementClone.classList.add('hidden');
-    errorServerSideSpace.removeEventListener('click', onErrorServerSideSpaceClick); //аналогично
-    errorServerDiv.removeEventListener('click', onErrorServerDivClick);
-  };
-
-  createCloseAndEscapeListeners(errorServerElementClone, errorServerButton, closeErrorMessage);
-
-  const onErrorServerSideSpaceClick = () => {
-    closeErrorMessage();
-  };
-  const onErrorServerDivClick = (evt) => {
-    evt.stopPropagation();
-  };
-
-  errorServerSideSpace.addEventListener('click', onErrorServerSideSpaceClick);
-  errorServerDiv.addEventListener('click', onErrorServerDivClick);
+  showMessage(errorServerElementClone, errorServerSideSpace, errorServerDiv, errorServerButton);
 };
 
 
