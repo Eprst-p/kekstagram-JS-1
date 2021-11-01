@@ -1,36 +1,83 @@
-import {cancelAndEscape, addBodyModalOpen, isEscapeKey, checkCommentLength} from './utilities.js';
+import {createCloseAndEscapeListeners, addBodyModalOpen, isEscapeKey, checkCommentLength, removeBodyModalOpen} from './utilities.js';
+import {showSuccesMessage, showErrorMessage} from './errors-succes.js';
+import {sendData} from './server-fetch.js';
 
 
-const loadPhoto = function () {
-  //общее
-  const formElement = document.querySelector('.img-upload__form');
-  const uploadFile = formElement.querySelector('#upload-file');
-  const uploadOverlay = formElement.querySelector('.img-upload__overlay');
-  const uploadCancelButton = formElement.querySelector('#upload-cancel');
+//общее
+const formElement = document.querySelector('.img-upload__form');
+const uploadFile = formElement.querySelector('#upload-file');
+const uploadOverlay = formElement.querySelector('.img-upload__overlay');
+const uploadCancelButton = formElement.querySelector('#upload-cancel');
 
-  //для редактирования изображения
-  const scaleField = uploadOverlay.querySelector('.img-upload__scale');
-  const scaleValueElement = scaleField.querySelector('input[name="scale"]');
-  const uploadImg = uploadOverlay.querySelector('.img-upload__preview img');
-  const sliderElement = uploadOverlay.querySelector('.effect-level__slider');
-  const effectValueElement = uploadOverlay.querySelector('input[name="effect-level"]');
-  const effectList = uploadOverlay.querySelector('.effects__list');
-  const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
+//для редактирования изображения
+const scaleField = uploadOverlay.querySelector('.img-upload__scale');
+const scaleValueInput = scaleField.querySelector('input[name="scale"]');
+const uploadImg = uploadOverlay.querySelector('.img-upload__preview img');
+const sliderElement = uploadOverlay.querySelector('.effect-level__slider');
+const effectValueInput = uploadOverlay.querySelector('input[name="effect-level"]');
+const effectList = uploadOverlay.querySelector('.effects__list');
+const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
 
-  //для хештегов м комментов
-  const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
-  const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
-  const commentsTextArea = uploadOverlay.querySelector('.text__description');
+//для хештегов и комментов
+const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
+const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
+const commentsTextArea = uploadOverlay.querySelector('.text__description');
 
+//фокус на поле для комментов и хештегов
+const onFieldFocus = function (field) {
+  field.addEventListener('keydown', (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.stopPropagation();
+    }
+  });
+};
+
+//возвращение полей и эффектов на значения по умолчанию
+const setFieldsToDeafault = () => {
+  formElement.reset();
+  sliderField.classList.add('hidden');
+  uploadImg.style.filter = 'none';
+  uploadImg.style.transform = 'scale(1.0)';
+
+};
+
+//функционал при закрытии окон
+const closeFormFunctional = function () {
+  setFieldsToDeafault();
+  uploadFile.value = '';
+  hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
+  commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
+};
+
+//функционал для успеха/ошибки
+const succesFormSubmit = function () {
+  uploadOverlay.classList.add('hidden');
+  removeBodyModalOpen();
+  closeFormFunctional();
+  showSuccesMessage();
+  setFieldsToDeafault();
+};
+
+const errorFormSubmit = function () {
+  uploadOverlay.classList.add('hidden');
+  removeBodyModalOpen();
+  closeFormFunctional();
+  showErrorMessage();
+};
+
+//блок формы
+const createForm = function () {
 
   //блок комментов
+  const MAX_COMMENT_LENGTH = 140;
   const onCommentsFieldInput = function () {
-    if (!checkCommentLength(commentsTextArea.value.length, 140)) {
+    if (!checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
       commentsTextArea.setCustomValidity('Слишком длинный коментарий');
       commentsTextArea.reportValidity();
     }
   };
   commentsTextArea.addEventListener('input', onCommentsFieldInput);
+  commentsTextArea.addEventListener('focus', onFieldFocus(commentsTextArea));
 
 
   //блок хештегов
@@ -70,22 +117,24 @@ const loadPhoto = function () {
       }
       else {
         createValidityMessage('');
+        hashtagsInput.style.border = 'none';
       }
     }
   };
   hashtagsInput.addEventListener('input', onHashtagFieldInput);
+  hashtagsInput.addEventListener('focus', onFieldFocus(hashtagsInput));
 
 
   //блок масштаба
   const onScaleClick = function (evt) {
-    const scaleValue = +scaleValueElement.value.slice(0,-1);
+    const scaleValue = +scaleValueInput.value.slice(0,-1);
     if (evt.target.matches('.scale__control--smaller') && scaleValue > 25) {
-      scaleValueElement.value = `${scaleValue - 25}%`;
-      uploadImg.style.transform = `scale(${+scaleValueElement.value.slice(0,-1) / 100})`;
+      scaleValueInput.value = `${scaleValue - 25}%`;
+      uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
     if (evt.target.matches('.scale__control--bigger') && scaleValue < 100) {
-      scaleValueElement.value = `${scaleValue + 25}%`;
-      uploadImg.style.transform = `scale(${+scaleValueElement.value.slice(0,-1) / 100})`;
+      scaleValueInput.value = `${scaleValue + 25}%`;
+      uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
   };
   scaleField.addEventListener('click', onScaleClick);
@@ -119,8 +168,10 @@ const loadPhoto = function () {
         slider.set(rangeMax);
       };
 
-      const setDefaultEffect = () => {
+      const setEffect = (effectName, unitSymbol) => {
         sliderField.classList.remove('hidden');
+        effect = effectName;
+        unit = unitSymbol;
         uploadImg.style.filter = `${effect}(${slider.get(true)}${unit})`;
       };
 
@@ -129,34 +180,24 @@ const loadPhoto = function () {
         uploadImg.style.filter = 'none';
       }
       if (checkEffect('#effect-chrome')) {
-        effect = 'grayscale';
-        unit = '';
         updateSliderOptions(0, 1, 0.1);
-        setDefaultEffect();
+        setEffect('grayscale', '');
       }
       if (checkEffect('#effect-sepia')) {
-        effect ='sepia';
-        unit = '';
         updateSliderOptions(0, 1, 0.1);
-        setDefaultEffect();
+        setEffect('sepia', '');
       }
       if (checkEffect('#effect-marvin')) {
-        effect ='invert';
-        unit = '%';
         updateSliderOptions(0, 100, 1);
-        setDefaultEffect();
+        setEffect('invert', '%');
       }
       if (checkEffect('#effect-phobos')) {
-        effect ='blur';
-        unit = 'px';
         updateSliderOptions(0, 3, 0.1);
-        setDefaultEffect();
+        setEffect('blur', 'px');
       }
       if (checkEffect('#effect-heat')) {
-        effect ='brightness';
-        unit = '';
         updateSliderOptions(1, 3, 0.1);
-        setDefaultEffect();
+        setEffect('brightness', '');
       }
     }
   };
@@ -165,48 +206,41 @@ const loadPhoto = function () {
 
   sliderElement.noUiSlider.on('update', () => {
     const sliderValue = slider.get(true);
-    effectValueElement.value = sliderValue;
+    effectValueInput.value = sliderValue;
     uploadImg.style.filter = `${effect}(${sliderValue}${unit})`;
   });
-
-
-  //общий блок при открытии и отправке формы
-  const allowedExtensions = ['png', 'jpg'];
-
-  const onUploadFileChange = function () {
-    uploadOverlay.classList.remove('hidden');
-    sliderField.classList.add('hidden');
-    uploadImg.style.filter = 'none';
-    addBodyModalOpen();
-    if (!allowedExtensions.includes(uploadFile.value.toLowerCase().slice(-3))) {
-      uploadFile.setCustomValidity('Неверный формат');
-      uploadFile.reportValidity();
-    } else {
-      uploadFile.setCustomValidity('');
-      uploadFile.reportValidity();
-    }
-
-    const onFieldFocus = function (field) {
-      field.addEventListener('keydown', (evt) => {
-        if (isEscapeKey(evt)) {
-          evt.stopPropagation();
-        }
-      });
-    };
-    hashtagsInput.addEventListener('focus', onFieldFocus(hashtagsInput));
-    commentsTextArea.addEventListener('focus', onFieldFocus(commentsTextArea));
-
-    const closeFormFunctional = function () {
-      uploadFile.value = '';
-      scaleValueElement.value = '100%';
-      uploadImg.style.transform = 'scale(1.0)';
-      //+какие-то другие формы нужно тоже сбросить (пока хз какие)
-      hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
-      commentsTextArea.removeEventListener('focus', onFieldFocus(commentsTextArea));
-    };
-    cancelAndEscape(uploadOverlay, uploadCancelButton, closeFormFunctional);
-  };
-  uploadFile.addEventListener('change', onUploadFileChange);
 };
 
-export {loadPhoto};
+//общий блок при открытии и отправке формы
+const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
+
+const onUploadFileChange = function () {
+  uploadOverlay.classList.remove('hidden');
+  addBodyModalOpen();
+
+  if (!ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension))) {
+    uploadFile.setCustomValidity('Неверный формат');
+    uploadFile.reportValidity();
+  } else {
+    uploadFile.setCustomValidity('');
+    uploadFile.reportValidity();
+  }
+  createCloseAndEscapeListeners(uploadOverlay, uploadCancelButton, closeFormFunctional);
+};
+uploadFile.addEventListener('change', onUploadFileChange);
+
+
+const loadForm = function () {
+  const onFormSubmit = function (evt) {
+    evt.preventDefault();
+
+    sendData(
+      () => succesFormSubmit(),
+      () => errorFormSubmit(),
+      new FormData(formElement),
+    );
+  };
+  formElement.addEventListener('submit', onFormSubmit);
+};
+
+export {createForm, loadForm};

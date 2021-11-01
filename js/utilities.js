@@ -16,7 +16,7 @@ const addBodyModalOpen = () => document.querySelector('body').classList.add('mod
 const removeBodyModalOpen = () => document.querySelector('body').classList.remove('modal-open');
 
 
-const cancelAndEscape = function (overlay, cancelButton, otherFunctionality) {
+const createCloseAndEscapeListeners = function (overlay, cancelButton, otherFunctionality) {
   const onCloseButtonClick = function () {
     overlay.classList.add('hidden');
     removeBodyModalOpen();
@@ -41,4 +41,4 @@ const cancelAndEscape = function (overlay, cancelButton, otherFunctionality) {
 
 };
 
-export {getRandomPositiveNumber, checkCommentLength, addBodyModalOpen, removeBodyModalOpen, cancelAndEscape, isEscapeKey};
+export {getRandomPositiveNumber, checkCommentLength, addBodyModalOpen, removeBodyModalOpen, createCloseAndEscapeListeners, isEscapeKey};

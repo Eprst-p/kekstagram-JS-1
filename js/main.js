@@ -1,12 +1,19 @@
-import {photoObjects} from './gen-objects.js';
+import {showServerErrorMessage} from './errors-succes.js';
+import {getData} from './server-fetch.js';
 import {fillMiniPictures} from './mini-pictures.js';
 import {showBigPicture} from './big-picture.js';
-import {loadPhoto} from './form.js';
+import {createForm, loadForm} from './form.js';
 
 
-console.log(photoObjects);
+getData(
+  (photosFromServer) => {
+    fillMiniPictures(photosFromServer);
+    showBigPicture(photosFromServer);
+  },
+  () => {
+    showServerErrorMessage();
+  },
+);
 
-fillMiniPictures();
-showBigPicture();
-loadPhoto();
-
+createForm();
+loadForm();

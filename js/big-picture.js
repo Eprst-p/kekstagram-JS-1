@@ -1,8 +1,7 @@
-import {photoObjects} from './gen-objects.js';
-import {addBodyModalOpen, cancelAndEscape} from './utilities.js';
+import {addBodyModalOpen, createCloseAndEscapeListeners} from './utilities.js';
 
 
-const showBigPicture = function () {
+const showBigPicture = function (photoObjects) {
   const bigPicture = document.querySelector('.big-picture');
   const fullPictureContainer = document.querySelectorAll('.picture');
   const pictureContainer = document.querySelector('.pictures');
@@ -65,7 +64,7 @@ const showBigPicture = function () {
     const closeFunctional = function () {
       commentLoadButton.removeEventListener('click', onLoadCommentsClick);
     };
-    cancelAndEscape(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
+    createCloseAndEscapeListeners(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
   };
 
 
