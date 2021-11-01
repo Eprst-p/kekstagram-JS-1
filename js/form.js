@@ -23,6 +23,8 @@ const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
 const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
 const commentsTextArea = uploadOverlay.querySelector('.text__description');
 
+
+
 //фокус на поле для комментов и хештегов
 const onFieldFocus = function (field) {
   field.addEventListener('keydown', (evt) => {
@@ -74,6 +76,12 @@ const createForm = function () {
     if (!checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
       commentsTextArea.setCustomValidity('Слишком длинный коментарий');
       commentsTextArea.reportValidity();
+      commentsTextArea.style.border = '4px solid #aa0202';
+    }
+    if (checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
+      commentsTextArea.setCustomValidity('');
+      commentsTextArea.reportValidity();
+      commentsTextArea.style.border = 'none';
     }
   };
   commentsTextArea.addEventListener('input', onCommentsFieldInput);
@@ -89,6 +97,7 @@ const createForm = function () {
       const createValidityMessage = function (message) {
         hashtagsInput.setCustomValidity(message);
         hashtagsInput.reportValidity();
+        hashtagsInput.style.border = '4px solid #aa0202';
       };
 
       if (hashtag[0] !== '#') {
