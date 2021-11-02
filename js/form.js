@@ -24,7 +24,6 @@ const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
 const commentsTextArea = uploadOverlay.querySelector('.text__description');
 
 
-
 //фокус на поле для комментов и хештегов
 const onFieldFocus = function (field) {
   field.addEventListener('keydown', (evt) => {
@@ -132,7 +131,6 @@ const createForm = function () {
   };
   hashtagsInput.addEventListener('input', onHashtagFieldInput);
   hashtagsInput.addEventListener('focus', onFieldFocus(hashtagsInput));
-
 
   //блок масштаба
   const onScaleClick = function (evt) {
