@@ -6,16 +6,19 @@ function getRandomPositiveNumber (a, b) {
 
 //Реализация рандомайзера взята с MDN Web Docs. Не является криптологически стойким.
 
+//проверка длины коммента
 function checkCommentLength (commentLength, maxCommentLength) {
   return (commentLength <= maxCommentLength);
 }
 
+//проверка на кнопку Esc
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
+//скролинг окна
 const addBodyModalOpen = () => document.querySelector('body').classList.add('modal-open');
 const removeBodyModalOpen = () => document.querySelector('body').classList.remove('modal-open');
 
-
+//закрытие эелементов через крестик и Esc
 const createCloseAndEscapeListeners = function (overlay, cancelButton, otherFunctionality) {
   const onCloseButtonClick = function () {
     overlay.classList.add('hidden');

@@ -3,7 +3,7 @@ import {addBodyModalOpen, createCloseAndEscapeListeners} from './utilities.js';
 
 const createBigPictureContent = function (photoObjects) {
   const bigPicture = document.querySelector('.big-picture');
-  const fullPictureContainer = document.querySelectorAll('.picture');
+  const miniPictures = document.querySelectorAll('.picture');
   const pictureContainer = document.querySelector('.pictures');
   const bigPictureCancelButton = bigPicture.querySelector('.big-picture__cancel');
 
@@ -61,6 +61,7 @@ const createBigPictureContent = function (photoObjects) {
     };
     commentLoadButton.addEventListener('click', onLoadCommentsClick);
 
+    //функционал закрытия окна
     const closeFunctional = function () {
       commentLoadButton.removeEventListener('click', onLoadCommentsClick);
     };
@@ -68,7 +69,7 @@ const createBigPictureContent = function (photoObjects) {
   };
 
 
-  //открытие большой картинки
+  //открытие большой картинки по клику
   const onPictureClick = function (evt) {
     if (evt.target.closest('.picture')) {
       const targetSearchArea = evt.target.closest('.picture');
@@ -79,8 +80,8 @@ const createBigPictureContent = function (photoObjects) {
       addBodyModalOpen();
       commentLoadButton.classList.remove('hidden');
 
-      const fullPictureContainerArray = Array.from(fullPictureContainer); //созадем массив из псевдомассива (иначе findIndex не работает)
-      const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
+      const currentMiniPictures = Array.from(miniPictures); //созадем массив из псевдомассива (иначе findIndex не работает)
+      const targetIndex = currentMiniPictures.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
       showComments();
 

@@ -224,6 +224,7 @@ const createForm = function () {
 //общий блок при открытии и отправке формы
 const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 
+//выбор файла
 const onUploadFileChange = function () {
   uploadOverlay.classList.remove('hidden');
   addBodyModalOpen();
@@ -245,7 +246,7 @@ const onUploadFileChange = function () {
 };
 uploadFile.addEventListener('change', onUploadFileChange);
 
-
+//загрузка формы на серв
 const loadForm = function () {
   const onFormSubmit = function (evt) {
     evt.preventDefault();

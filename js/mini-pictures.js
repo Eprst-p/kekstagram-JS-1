@@ -1,5 +1,5 @@
-
-const fillMiniPictures = function (photoObjects) {
+//функция заполнения картинками
+const fillWithPictures = function (photoObjects) {
   const pictureTemplate = document.querySelector('#picture').content;
   const pictureElement = pictureTemplate.querySelector('.picture');
   const pictureContainer = document.querySelector('.pictures');
@@ -20,4 +20,4 @@ const fillMiniPictures = function (photoObjects) {
   pictureContainer.appendChild(picturesFragment);
 };
 
-export {fillMiniPictures};
+export {fillWithPictures};

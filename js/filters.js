@@ -1,6 +1,6 @@
 import {allPhotos} from './server-fetch.js';
 import {getRandomPositiveNumber} from './utilities.js';
-import {fillMiniPictures} from './mini-pictures.js';
+import {fillWithPictures} from './mini-pictures.js';
 import {createBigPictureContent} from './big-picture.js';
 import {debounce} from './utils/debounce.js';
 
@@ -15,6 +15,7 @@ const createFilters = () => {
   imgFilters.classList.remove('img-filters--inactive');
   const pictureContainer = document.querySelector('.pictures');
 
+  //очистка
   const clearPictures = () => {
     const loadPictures = document.querySelectorAll('.picture');
     loadPictures.forEach((picture) => {
@@ -22,6 +23,7 @@ const createFilters = () => {
     });
   };
 
+  //подсветка кнопки
   const changeButtonActiveClass = (button) => {
     discussedFilterButton.classList.remove('img-filters__button--active');
     randomFilterButton.classList.remove('img-filters__button--active');
@@ -34,7 +36,7 @@ const createFilters = () => {
   const onDefaultButtonClick = () => {
     clearPictures();
     changeButtonActiveClass(deafaultFilterButton);
-    fillMiniPictures(allPhotos);
+    fillWithPictures(allPhotos);
     createBigPictureContent(allPhotos);
   };
   deafaultFilterButton.addEventListener('click', debounce(onDefaultButtonClick));
@@ -62,7 +64,7 @@ const createFilters = () => {
       const element = allPhotos[index];
       randomPhotos.push(element);
     }
-    fillMiniPictures(randomPhotos);
+    fillWithPictures(randomPhotos);
     createBigPictureContent(randomPhotos);
   };
   randomFilterButton.addEventListener('click', debounce(onRandomButtonClick));
@@ -82,7 +84,7 @@ const createFilters = () => {
 
     const disscussedPhotos = allPhotos.slice().sort(comparePictureComments);
 
-    fillMiniPictures(disscussedPhotos);
+    fillWithPictures(disscussedPhotos);
     createBigPictureContent(disscussedPhotos);
   };
   discussedFilterButton.addEventListener('click', debounce(onDiscussedButtonClick));
