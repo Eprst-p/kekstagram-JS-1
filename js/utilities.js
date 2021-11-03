@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 function getRandomPositiveNumber (a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b))); // находим минимальное значение из модулей a и b, округляем вверх
   const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b))); // находим максимальное значение из модулей a и b, округляем вниз
@@ -23,7 +24,7 @@ const createCloseAndEscapeListeners = function (overlay, cancelButton, otherFunc
   const onCloseButtonClick = function () {
     overlay.classList.add('hidden');
     removeBodyModalOpen();
-    document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (позже запретить)
+    document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (задизейблено в линтере)
     cancelButton.removeEventListener('click', onCloseButtonClick);
     otherFunctionality();
   };

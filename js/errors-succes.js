@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import {createCloseAndEscapeListeners} from './utilities.js';
 
 const sectionToAdd = document.querySelector('main');
@@ -36,7 +37,7 @@ const showMessage = (elementClone, elementSideSpace, elementDiv, elementButton) 
   elementClone.classList.remove('hidden');
   const closeMessage = () => {
     elementClone.classList.add('hidden');
-    elementSideSpace.removeEventListener('click', onSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался.
+    elementSideSpace.removeEventListener('click', onSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался (задизейблено в линтере)
     elementDiv.removeEventListener('click', onDivClick);
   };
 

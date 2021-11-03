@@ -8,6 +8,7 @@ const formElement = document.querySelector('.img-upload__form');
 const uploadFile = formElement.querySelector('#upload-file');
 const uploadOverlay = formElement.querySelector('.img-upload__overlay');
 const uploadCancelButton = formElement.querySelector('#upload-cancel');
+const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 
 //для редактирования изображения
 const scaleField = uploadOverlay.querySelector('.img-upload__scale');
@@ -22,6 +23,7 @@ const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
 const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
 const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
 const commentsTextArea = uploadOverlay.querySelector('.text__description');
+const MAX_COMMENT_LENGTH = 140;
 
 //превью
 const previewImg = formElement.querySelector('.img-upload__preview img');
@@ -73,7 +75,6 @@ const errorFormSubmit = function () {
 const createForm = function () {
 
   //блок комментов
-  const MAX_COMMENT_LENGTH = 140;
   const onCommentsFieldInput = function () {
     if (!checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
       commentsTextArea.setCustomValidity('Слишком длинный коментарий');
@@ -222,8 +223,6 @@ const createForm = function () {
 };
 
 //общий блок при открытии и отправке формы
-const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
-
 //выбор файла
 const onUploadFileChange = function () {
   uploadOverlay.classList.remove('hidden');

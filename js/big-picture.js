@@ -17,7 +17,7 @@ const createBigPictureContent = function (photoObjects) {
   //добавляем комменты
   const addComments = function (index) {
     const commentFragment = document.createDocumentFragment();
-    commentsContainer.innerHTML = ''; //очищаем старые комменты (иначе при клике они будут постоянно накапливаться)
+    commentsContainer.innerHTML = '';
     const currentComments = photoObjects[index].comments;
     currentComments.forEach((commentObject) =>{
       const currentComment = commentElement.cloneNode(true);
