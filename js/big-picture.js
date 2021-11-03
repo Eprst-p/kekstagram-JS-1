@@ -1,7 +1,7 @@
 import {addBodyModalOpen, createCloseAndEscapeListeners} from './utilities.js';
 
 
-const createBigPictureContent = function (photoObjects) {
+const createBigPictureContent = (photoObjects) => {
   const bigPicture = document.querySelector('.big-picture');
   const miniPictures = document.querySelectorAll('.picture');
   const pictureContainer = document.querySelector('.pictures');
@@ -15,7 +15,7 @@ const createBigPictureContent = function (photoObjects) {
 
 
   //добавляем комменты
-  const addComments = function (index) {
+  const addComments = (index) => {
     const commentFragment = document.createDocumentFragment();
     commentsContainer.innerHTML = '';
     const currentComments = photoObjects[index].comments;
@@ -30,13 +30,13 @@ const createBigPictureContent = function (photoObjects) {
   };
 
   //отображение комментов
-  const showComments = function () {
+  const showComments = () => {
     const comments = commentsContainer.querySelectorAll('.social__comment');
     comments.forEach((comment)=>{
       comment.classList.add('hidden');
     });
     let shownComments = 0;
-    const showFiveComments = function () {
+    const showFiveComments = () => {
       let count = 0;
       for (let i=0; i<comments.length; i++) {
         const comment = comments[i];
@@ -56,13 +56,13 @@ const createBigPictureContent = function (photoObjects) {
     };
     showFiveComments();
 
-    const onLoadCommentsClick = function () {
+    const onLoadCommentsClick = () => {
       showFiveComments();
     };
     commentLoadButton.addEventListener('click', onLoadCommentsClick);
 
     //функционал закрытия окна
-    const closeFunctional = function () {
+    const closeFunctional = () => {
       commentLoadButton.removeEventListener('click', onLoadCommentsClick);
     };
     createCloseAndEscapeListeners(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
@@ -70,7 +70,7 @@ const createBigPictureContent = function (photoObjects) {
 
 
   //открытие большой картинки по клику
-  const onPictureClick = function (evt) {
+  const onPictureClick = (evt) => {
     if (evt.target.closest('.picture')) {
       const targetSearchArea = evt.target.closest('.picture');
       bigPicture.classList.remove('hidden');

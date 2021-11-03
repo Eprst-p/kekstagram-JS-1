@@ -1,5 +1,5 @@
 //функция заполнения картинками
-const fillWithPictures = function (photoObjects) {
+const fillWithPictures = (photoObjects) => {
   const pictureTemplate = document.querySelector('#picture').content;
   const pictureElement = pictureTemplate.querySelector('.picture');
   const pictureContainer = document.querySelector('.pictures');
