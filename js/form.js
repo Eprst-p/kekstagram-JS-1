@@ -23,6 +23,9 @@ const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
 const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
 const commentsTextArea = uploadOverlay.querySelector('.text__description');
 
+//превью
+const previewImg = formElement.querySelector('.img-upload__preview img');
+
 
 //фокус на поле для комментов и хештегов
 const onFieldFocus = function (field) {
@@ -224,8 +227,9 @@ const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 const onUploadFileChange = function () {
   uploadOverlay.classList.remove('hidden');
   addBodyModalOpen();
+  const matchesExtensions = ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension));
 
-  if (!ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension))) {
+  if (!matchesExtensions) {
     uploadFile.setCustomValidity('Неверный формат');
     uploadFile.reportValidity();
   } else {
@@ -233,6 +237,11 @@ const onUploadFileChange = function () {
     uploadFile.reportValidity();
   }
   createCloseAndEscapeListeners(uploadOverlay, uploadCancelButton, closeFormFunctional);
+
+  const userFile = uploadFile.files[0];
+  if (matchesExtensions) {
+    previewImg.src = URL.createObjectURL(userFile);
+  }
 };
 uploadFile.addEventListener('change', onUploadFileChange);
 
