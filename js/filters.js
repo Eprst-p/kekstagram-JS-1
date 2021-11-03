@@ -4,7 +4,6 @@ import {fillWithPictures} from './mini-pictures.js';
 import {createBigPictureContent} from './big-picture.js';
 import {debounce} from './utils/debounce.js';
 
-
 const imgFilters = document.querySelector('.img-filters');
 const deafaultFilterButton = document.querySelector('button[id="filter-default"]');
 const randomFilterButton = document.querySelector('button[id="filter-random"]');
@@ -30,7 +29,6 @@ const createFilters = () => {
     randomFilterButton.classList.remove('img-filters__button--active');
     deafaultFilterButton.classList.remove('img-filters__button--active');
     button.classList.add('img-filters__button--active');
-
   };
 
   //по умолчанию
@@ -74,7 +72,6 @@ const createFilters = () => {
     clearPictures();
     changeButtonActiveClass(discussedFilterButton);
 
-
     const getCommentsAmount = (picture) => picture.comments.length;
     const comparePictureComments = (pictureA, pictureB) => {
       const amountA = getCommentsAmount(pictureA);
@@ -83,7 +80,6 @@ const createFilters = () => {
     };
 
     const disscussedPhotos = allPhotos.slice().sort(comparePictureComments);
-
     fillWithPictures(disscussedPhotos);
     createBigPictureContent(disscussedPhotos);
   };

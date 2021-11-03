@@ -27,7 +27,6 @@ const sendData = (onSuccess, onError, formData) => fetch(
     } else {
       onError();
     }
-
   })
   .catch(() => {
     onError();
