@@ -1,7 +1,9 @@
 import {allPhotos} from './server-fetch.js';
 import {getRandomPositiveNumber} from './utilities.js';
 import {fillMiniPictures} from './mini-pictures.js';
-import {showBigPicture} from './big-picture.js';
+import {createBigPictureContent} from './big-picture.js';
+import {debounce} from './utils/debounce.js';
+
 
 const imgFilters = document.querySelector('.img-filters');
 const deafaultFilterButton = document.querySelector('button[id="filter-default"]');
@@ -9,7 +11,7 @@ const randomFilterButton = document.querySelector('button[id="filter-random"]');
 const discussedFilterButton = document.querySelector('button[id="filter-discussed"]');
 
 
-const showFilters = () => {
+const createFilters = () => {
   imgFilters.classList.remove('img-filters--inactive');
   const pictureContainer = document.querySelector('.pictures');
 
@@ -33,9 +35,9 @@ const showFilters = () => {
     clearPictures();
     changeButtonActiveClass(deafaultFilterButton);
     fillMiniPictures(allPhotos);
-    showBigPicture(allPhotos);
+    createBigPictureContent(allPhotos);
   };
-  deafaultFilterButton.addEventListener('click', onDefaultButtonClick);
+  deafaultFilterButton.addEventListener('click', debounce(onDefaultButtonClick));
 
   //рандомные 10 пикчей
   const onRandomButtonClick = () => {
@@ -61,9 +63,9 @@ const showFilters = () => {
       randomPhotos.push(element);
     }
     fillMiniPictures(randomPhotos);
-    showBigPicture(randomPhotos);
+    createBigPictureContent(randomPhotos);
   };
-  randomFilterButton.addEventListener('click', onRandomButtonClick);
+  randomFilterButton.addEventListener('click', debounce(onRandomButtonClick));
 
   //обсуждаемые - количество комментов по убыванию
   const onDiscussedButtonClick = () => {
@@ -81,9 +83,9 @@ const showFilters = () => {
     const disscussedPhotos = allPhotos.slice().sort(comparePictureComments);
 
     fillMiniPictures(disscussedPhotos);
-    showBigPicture(disscussedPhotos);
+    createBigPictureContent(disscussedPhotos);
   };
-  discussedFilterButton.addEventListener('click', onDiscussedButtonClick);
+  discussedFilterButton.addEventListener('click', debounce(onDiscussedButtonClick));
 };
 
-export {showFilters};
+export {createFilters};

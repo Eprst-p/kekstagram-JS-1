@@ -1,7 +1,7 @@
 import {addBodyModalOpen, createCloseAndEscapeListeners} from './utilities.js';
 
 
-const showBigPicture = function (photoObjects) {
+const createBigPictureContent = function (photoObjects) {
   const bigPicture = document.querySelector('.big-picture');
   const fullPictureContainer = document.querySelectorAll('.picture');
   const pictureContainer = document.querySelector('.pictures');
@@ -91,4 +91,4 @@ const showBigPicture = function (photoObjects) {
 
 };
 
-export {showBigPicture};
+export {createBigPictureContent};
