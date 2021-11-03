@@ -1,9 +1,9 @@
 import {addBodyModalOpen, createCloseAndEscapeListeners} from './utilities.js';
 
 
-const showBigPicture = function (photoObjects) {
+const createBigPictureContent = (photoObjects) => {
   const bigPicture = document.querySelector('.big-picture');
-  const fullPictureContainer = document.querySelectorAll('.picture');
+  const miniPictures = document.querySelectorAll('.picture');
   const pictureContainer = document.querySelector('.pictures');
   const bigPictureCancelButton = bigPicture.querySelector('.big-picture__cancel');
 
@@ -15,9 +15,9 @@ const showBigPicture = function (photoObjects) {
 
 
   //добавляем комменты
-  const addComments = function (index) {
+  const addComments = (index) => {
     const commentFragment = document.createDocumentFragment();
-    commentsContainer.innerHTML = ''; //очищаем старые комменты (иначе при клике они будут постоянно накапливаться)
+    commentsContainer.innerHTML = '';
     const currentComments = photoObjects[index].comments;
     currentComments.forEach((commentObject) =>{
       const currentComment = commentElement.cloneNode(true);
@@ -30,13 +30,13 @@ const showBigPicture = function (photoObjects) {
   };
 
   //отображение комментов
-  const showComments = function () {
+  const showComments = () => {
     const comments = commentsContainer.querySelectorAll('.social__comment');
     comments.forEach((comment)=>{
       comment.classList.add('hidden');
     });
     let shownComments = 0;
-    const showFiveComments = function () {
+    const showFiveComments = () => {
       let count = 0;
       for (let i=0; i<comments.length; i++) {
         const comment = comments[i];
@@ -56,20 +56,21 @@ const showBigPicture = function (photoObjects) {
     };
     showFiveComments();
 
-    const onLoadCommentsClick = function () {
+    const onLoadCommentsClick = () => {
       showFiveComments();
     };
     commentLoadButton.addEventListener('click', onLoadCommentsClick);
 
-    const closeFunctional = function () {
+    //функционал закрытия окна
+    const closeFunctional = () => {
       commentLoadButton.removeEventListener('click', onLoadCommentsClick);
     };
     createCloseAndEscapeListeners(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
   };
 
 
-  //открытие большой картинки
-  const onPictureClick = function (evt) {
+  //открытие большой картинки по клику
+  const onPictureClick = (evt) => {
     if (evt.target.closest('.picture')) {
       const targetSearchArea = evt.target.closest('.picture');
       bigPicture.classList.remove('hidden');
@@ -79,8 +80,8 @@ const showBigPicture = function (photoObjects) {
       addBodyModalOpen();
       commentLoadButton.classList.remove('hidden');
 
-      const fullPictureContainerArray = Array.from(fullPictureContainer); //созадем массив из псевдомассива (иначе findIndex не работает)
-      const targetIndex = fullPictureContainerArray.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
+      const currentMiniPictures = Array.from(miniPictures); //созадем массив из псевдомассива (иначе findIndex не работает)
+      const targetIndex = currentMiniPictures.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
       showComments();
 
@@ -91,4 +92,4 @@ const showBigPicture = function (photoObjects) {
 
 };
 
-export {showBigPicture};
+export {createBigPictureContent};

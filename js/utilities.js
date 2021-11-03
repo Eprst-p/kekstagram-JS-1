@@ -1,32 +1,34 @@
-function getRandomPositiveNumber (a, b) {
+/* eslint-disable no-use-before-define */
+const getRandomPositiveNumber = (a, b) => {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b))); // находим минимальное значение из модулей a и b, округляем вверх
   const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b))); // находим максимальное значение из модулей a и b, округляем вниз
   return Math.floor(Math.random() * (upper - lower + 1)) + lower;  //рандомное число от a до b включительно
-}
+};
 
 //Реализация рандомайзера взята с MDN Web Docs. Не является криптологически стойким.
 
-function checkCommentLength (commentLength, maxCommentLength) {
-  return (commentLength <= maxCommentLength);
-}
+//проверка длины коммента
+const checkCommentLength =(commentLength, maxCommentLength) => (commentLength <= maxCommentLength);
 
+//проверка на кнопку Esc
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
+//скролинг окна
 const addBodyModalOpen = () => document.querySelector('body').classList.add('modal-open');
 const removeBodyModalOpen = () => document.querySelector('body').classList.remove('modal-open');
 
-
-const createCloseAndEscapeListeners = function (overlay, cancelButton, otherFunctionality) {
-  const onCloseButtonClick = function () {
+//закрытие эелементов через крестик и Esc
+const createCloseAndEscapeListeners = (overlay, cancelButton, otherFunctionality) => {
+  const onCloseButtonClick = () => {
     overlay.classList.add('hidden');
     removeBodyModalOpen();
-    document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (позже запретить)
+    document.removeEventListener('keydown', onEscKey); //чуть-шуть ругаица нащальника (задизейблено в линтере)
     cancelButton.removeEventListener('click', onCloseButtonClick);
     otherFunctionality();
   };
   cancelButton.addEventListener('click', onCloseButtonClick);
 
-  const onEscKey = function (evt) {
+  const onEscKey = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       overlay.classList.add('hidden');

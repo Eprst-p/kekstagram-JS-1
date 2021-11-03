@@ -1,15 +1,15 @@
+/* eslint-disable no-use-before-define */
 import {createCloseAndEscapeListeners} from './utilities.js';
 
-//успешный успех
-const sectionToAdd = document.querySelector('body');
+const sectionToAdd = document.querySelector('main');
 
+//успешный успех
 const successTemplate = document.querySelector('#success').content;
 const successElement = successTemplate.querySelector('.success');
 const successElementClone = successElement.cloneNode(true);
 const successSideSpace = successElementClone.closest('.success');
 const successDiv = successElementClone.querySelector('.success__inner');
-const coolButton = successElementClone.querySelector('.success__button');
-
+const succesButton = successElementClone.querySelector('.success__button');
 
 //ошибочка при отправке
 const errorTemplate = document.querySelector('#error').content;
@@ -37,7 +37,7 @@ const showMessage = (elementClone, elementSideSpace, elementDiv, elementButton) 
   elementClone.classList.remove('hidden');
   const closeMessage = () => {
     elementClone.classList.add('hidden');
-    elementSideSpace.removeEventListener('click', onSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался. Можно вынести в отдельный модуль, но это хуже читаемо
+    elementSideSpace.removeEventListener('click', onSideSpaceClick); //та же фигня, незнаю, как перекомпоновать чтоб не ругался (задизейблено в линтере)
     elementDiv.removeEventListener('click', onDivClick);
   };
 
@@ -56,7 +56,7 @@ const showMessage = (elementClone, elementSideSpace, elementDiv, elementButton) 
 
 //сообщение об успехе
 const showSuccesMessage = () => {
-  showMessage(successElementClone, successSideSpace, successDiv, coolButton);
+  showMessage(successElementClone, successSideSpace, successDiv, succesButton);
 };
 
 //сообщение об ошибке

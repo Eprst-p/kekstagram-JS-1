@@ -8,6 +8,7 @@ const formElement = document.querySelector('.img-upload__form');
 const uploadFile = formElement.querySelector('#upload-file');
 const uploadOverlay = formElement.querySelector('.img-upload__overlay');
 const uploadCancelButton = formElement.querySelector('#upload-cancel');
+const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 
 //для редактирования изображения
 const scaleField = uploadOverlay.querySelector('.img-upload__scale');
@@ -22,9 +23,14 @@ const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
 const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
 const hashtagPattern = /^#[A-za-zА-яа-яЁё0-9]{1,19}$/;
 const commentsTextArea = uploadOverlay.querySelector('.text__description');
+const MAX_COMMENT_LENGTH = 140;
+
+//превью
+const previewImg = formElement.querySelector('.img-upload__preview img');
+
 
 //фокус на поле для комментов и хештегов
-const onFieldFocus = function (field) {
+const onFieldFocus = (field) => {
   field.addEventListener('keydown', (evt) => {
     if (isEscapeKey(evt)) {
       evt.stopPropagation();
@@ -42,7 +48,7 @@ const setFieldsToDeafault = () => {
 };
 
 //функционал при закрытии окон
-const closeFormFunctional = function () {
+const closeFormFunctional = () => {
   setFieldsToDeafault();
   uploadFile.value = '';
   hashtagsInput.removeEventListener('focus', onFieldFocus(hashtagsInput));
@@ -50,7 +56,7 @@ const closeFormFunctional = function () {
 };
 
 //функционал для успеха/ошибки
-const succesFormSubmit = function () {
+const succesFormSubmit = () => {
   uploadOverlay.classList.add('hidden');
   removeBodyModalOpen();
   closeFormFunctional();
@@ -58,7 +64,7 @@ const succesFormSubmit = function () {
   setFieldsToDeafault();
 };
 
-const errorFormSubmit = function () {
+const errorFormSubmit = () => {
   uploadOverlay.classList.add('hidden');
   removeBodyModalOpen();
   closeFormFunctional();
@@ -66,14 +72,19 @@ const errorFormSubmit = function () {
 };
 
 //блок формы
-const createForm = function () {
+const createForm = () => {
 
   //блок комментов
-  const MAX_COMMENT_LENGTH = 140;
-  const onCommentsFieldInput = function () {
+  const onCommentsFieldInput = () => {
     if (!checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
       commentsTextArea.setCustomValidity('Слишком длинный коментарий');
       commentsTextArea.reportValidity();
+      commentsTextArea.style.border = '4px solid #aa0202';
+    }
+    if (checkCommentLength(commentsTextArea.value.length, MAX_COMMENT_LENGTH)) {
+      commentsTextArea.setCustomValidity('');
+      commentsTextArea.reportValidity();
+      commentsTextArea.style.border = 'none';
     }
   };
   commentsTextArea.addEventListener('input', onCommentsFieldInput);
@@ -81,14 +92,15 @@ const createForm = function () {
 
 
   //блок хештегов
-  const onHashtagFieldInput = function() {
+  const onHashtagFieldInput = () => {
     const hashtags = hashtagsInput.value.toLowerCase().split(' ');
     for (let i = 0; i < hashtags.length; i++) {
       const hashtag = hashtags[i];
       const otherHashtags = hashtags.slice(0, i).concat(hashtags.slice(i+1));
-      const createValidityMessage = function (message) {
+      const createValidityMessage = (message) => {
         hashtagsInput.setCustomValidity(message);
         hashtagsInput.reportValidity();
+        hashtagsInput.style.border = '4px solid #aa0202';
       };
 
       if (hashtag[0] !== '#') {
@@ -124,9 +136,8 @@ const createForm = function () {
   hashtagsInput.addEventListener('input', onHashtagFieldInput);
   hashtagsInput.addEventListener('focus', onFieldFocus(hashtagsInput));
 
-
   //блок масштаба
-  const onScaleClick = function (evt) {
+  const onScaleClick = (evt) => {
     const scaleValue = +scaleValueInput.value.slice(0,-1);
     if (evt.target.matches('.scale__control--smaller') && scaleValue > 25) {
       scaleValueInput.value = `${scaleValue - 25}%`;
@@ -150,14 +161,12 @@ const createForm = function () {
 
   let effect = 'none';
   let unit = '';
-  const onEffectChange = function (evt) {
+  const onEffectChange = (evt) => {
     if (evt.target.closest('.effects__item')) {
       const targetSearchArea = evt.target.closest('.effects__item');
-      const checkEffect = function(effectType) {
-        return targetSearchArea.querySelector(effectType);
-      };
+      const checkEffect = (effectType) => targetSearchArea.querySelector(effectType);
 
-      const updateSliderOptions = function (rangeMin, rangeMax, step) {
+      const updateSliderOptions = (rangeMin, rangeMax, step) => {
         sliderElement.noUiSlider.updateOptions({
           range: {
             'min': rangeMin,
@@ -212,13 +221,13 @@ const createForm = function () {
 };
 
 //общий блок при открытии и отправке формы
-const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
-
-const onUploadFileChange = function () {
+//выбор файла
+const onUploadFileChange = () => {
   uploadOverlay.classList.remove('hidden');
   addBodyModalOpen();
+  const matchesExtensions = ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension));
 
-  if (!ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension))) {
+  if (!matchesExtensions) {
     uploadFile.setCustomValidity('Неверный формат');
     uploadFile.reportValidity();
   } else {
@@ -226,12 +235,17 @@ const onUploadFileChange = function () {
     uploadFile.reportValidity();
   }
   createCloseAndEscapeListeners(uploadOverlay, uploadCancelButton, closeFormFunctional);
+
+  const userFile = uploadFile.files[0];
+  if (matchesExtensions) {
+    previewImg.src = URL.createObjectURL(userFile);
+  }
 };
 uploadFile.addEventListener('change', onUploadFileChange);
 
-
-const loadForm = function () {
-  const onFormSubmit = function (evt) {
+//загрузка формы на серв
+const loadForm = () => {
+  const onFormSubmit = (evt) => {
     evt.preventDefault();
 
     sendData(
