@@ -9,6 +9,7 @@ const imgFilters = document.querySelector('.img-filters');
 const deafaultFilterButton = document.querySelector('button[id="filter-default"]');
 const randomFilterButton = document.querySelector('button[id="filter-random"]');
 const discussedFilterButton = document.querySelector('button[id="filter-discussed"]');
+const RANDOM_AMOUNT = 10;
 
 
 const createFilters = () => {
@@ -46,7 +47,6 @@ const createFilters = () => {
     clearPictures();
     changeButtonActiveClass(randomFilterButton);
 
-    const RANDOM_AMOUNT = 10;
     const randomPhotos = [];
     const usedIndexes = [];
 
