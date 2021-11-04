@@ -2,7 +2,6 @@ import {createCloseAndEscapeListeners, addBodyModalOpen, isEscapeKey, checkComme
 import {showSuccesMessage, showErrorMessage} from './errors-succes.js';
 import {sendData} from './server-fetch.js';
 
-
 //общее
 const formElement = document.querySelector('.img-upload__form');
 const uploadFile = formElement.querySelector('#upload-file');
@@ -44,7 +43,6 @@ const setFieldsToDeafault = () => {
   sliderField.classList.add('hidden');
   uploadImg.style.filter = 'none';
   uploadImg.style.transform = 'scale(1.0)';
-
 };
 
 //функционал при закрытии окон
@@ -89,7 +87,6 @@ const createForm = () => {
   };
   commentsTextArea.addEventListener('input', onCommentsFieldInput);
   commentsTextArea.addEventListener('focus', onFieldFocus(commentsTextArea));
-
 
   //блок хештегов
   const onHashtagFieldInput = () => {
@@ -149,7 +146,6 @@ const createForm = () => {
     }
   };
   scaleField.addEventListener('click', onScaleClick);
-
 
   //блок эффектов
   const slider = noUiSlider.create(sliderElement, {

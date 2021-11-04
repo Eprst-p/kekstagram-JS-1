@@ -4,7 +4,6 @@ const fillWithPictures = (photoObjects) => {
   const pictureElement = pictureTemplate.querySelector('.picture');
   const pictureContainer = document.querySelector('.pictures');
 
-
   const picturesFragment = document.createDocumentFragment();
 
   photoObjects.forEach((currentObject, index) => {
@@ -16,7 +15,6 @@ const fillWithPictures = (photoObjects) => {
     currentPicture.setAttribute('data-unique-id', index);
     picturesFragment.appendChild(currentPicture);
   });
-
   pictureContainer.appendChild(picturesFragment);
 };
 

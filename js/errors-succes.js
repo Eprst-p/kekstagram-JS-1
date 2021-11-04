@@ -49,7 +49,6 @@ const showMessage = (elementClone, elementSideSpace, elementDiv, elementButton) 
   const onDivClick = (evt) => {
     evt.stopPropagation();
   };
-
   elementSideSpace.addEventListener('click', onSideSpaceClick);
   elementDiv.addEventListener('click', onDivClick);
 };
@@ -68,6 +67,5 @@ const showErrorMessage = () => {
 const showServerErrorMessage = () => {
   showMessage(errorServerElementClone, errorServerSideSpace, errorServerDiv, errorServerButton);
 };
-
 
 export {showSuccesMessage, showErrorMessage, showServerErrorMessage};

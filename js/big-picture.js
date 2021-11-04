@@ -1,6 +1,5 @@
 import {addBodyModalOpen, createCloseAndEscapeListeners} from './utilities.js';
 
-
 const createBigPictureContent = (photoObjects) => {
   const bigPicture = document.querySelector('.big-picture');
   const miniPictures = document.querySelectorAll('.picture');
@@ -68,7 +67,6 @@ const createBigPictureContent = (photoObjects) => {
     createCloseAndEscapeListeners(bigPicture, bigPictureCancelButton, closeFunctional); //пока сюда переместил, т.к иначе не получается из-за областей видимости функций
   };
 
-
   //открытие большой картинки по клику
   const onPictureClick = (evt) => {
     if (evt.target.closest('.picture')) {
@@ -84,12 +82,9 @@ const createBigPictureContent = (photoObjects) => {
       const targetIndex = currentMiniPictures.findIndex((element) => element.dataset.uniqueId === targetSearchArea.dataset.uniqueId);
       addComments(targetIndex);
       showComments();
-
     }
   };
-
   pictureContainer.addEventListener('click', onPictureClick);
-
 };
 
 export {createBigPictureContent};
