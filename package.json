@@ -17,7 +17,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nouislider": "^15.5.0"
   },
   "scripts": {
     "start": "browser-sync start --server --no-ui --files \"js/**/*.js\"",
