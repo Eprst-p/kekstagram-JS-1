@@ -220,6 +220,7 @@ const createForm = () => {
 //выбор файла
 const onUploadFileChange = () => {
   uploadOverlay.classList.remove('hidden');
+  sliderField.classList.add('hidden');
   addBodyModalOpen();
   const matchesExtensions = ALLOWED_EXTENSIONS.some((fileExtension)=>uploadFile.value.toLowerCase().endsWith(fileExtension));
 
