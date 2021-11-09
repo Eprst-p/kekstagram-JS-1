@@ -136,11 +136,13 @@ const createForm = () => {
   //блок масштаба
   const onScaleClick = (evt) => {
     const scaleValue = +scaleValueInput.value.slice(0,-1);
-    if (evt.target.matches('.scale__control--smaller') && scaleValue > 25) {
+    const scaleButtonMinus = evt.target.matches('.scale__control--smaller');
+    const scaleButtonPlus = evt.target.matches('.scale__control--bigger');
+    if (scaleButtonMinus && scaleValue > 25) {
       scaleValueInput.value = `${scaleValue - 25}%`;
       uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
-    if (evt.target.matches('.scale__control--bigger') && scaleValue < 100) {
+    if (scaleButtonPlus && scaleValue < 100) {
       scaleValueInput.value = `${scaleValue + 25}%`;
       uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
