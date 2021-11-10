@@ -10,13 +10,16 @@ const uploadCancelButton = formElement.querySelector('#upload-cancel');
 const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 
 //для редактирования изображения
-const scaleField = uploadOverlay.querySelector('.img-upload__scale');
-const scaleValueInput = scaleField.querySelector('input[name="scale"]');
 const uploadImg = uploadOverlay.querySelector('.img-upload__preview img');
 const sliderElement = uploadOverlay.querySelector('.effect-level__slider');
 const effectValueInput = uploadOverlay.querySelector('input[name="effect-level"]');
 const effectList = uploadOverlay.querySelector('.effects__list');
 const sliderField = uploadOverlay.querySelector('.img-upload__effect-level');
+const scaleField = uploadOverlay.querySelector('.img-upload__scale');
+const scaleValueInput = scaleField.querySelector('input[name="scale"]');
+const SCALE_MIN = 25;
+const SCALE_MAX = 100;
+const SCALE_STEP = 25;
 
 //для хештегов и комментов
 const hashtagsInput = uploadOverlay.querySelector('input[name="hashtags"]');
@@ -138,12 +141,12 @@ const createForm = () => {
     const scaleValue = +scaleValueInput.value.slice(0,-1);
     const scaleButtonMinus = evt.target.matches('.scale__control--smaller');
     const scaleButtonPlus = evt.target.matches('.scale__control--bigger');
-    if (scaleButtonMinus && scaleValue > 25) {
-      scaleValueInput.value = `${scaleValue - 25}%`;
+    if (scaleButtonMinus && scaleValue > SCALE_MIN) {
+      scaleValueInput.value = `${scaleValue - SCALE_STEP}%`;
       uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
-    if (scaleButtonPlus && scaleValue < 100) {
-      scaleValueInput.value = `${scaleValue + 25}%`;
+    if (scaleButtonPlus && scaleValue < SCALE_MAX) {
+      scaleValueInput.value = `${scaleValue + SCALE_STEP}%`;
       uploadImg.style.transform = `scale(${+scaleValueInput.value.slice(0,-1) / 100})`;
     }
   };
